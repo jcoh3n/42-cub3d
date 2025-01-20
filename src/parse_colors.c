@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:27 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/20 16:53:30 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/20 17:07:43 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,10 @@ int	set_rgb_values(char **split, t_color *color)
 	free(split);
 	if (color->r < 0 || color->r > 255 || color->g < 0 || color->g > 255
 		|| color->b < 0 || color->b > 255)
-		error_exit("Error\nColor values must be between 0 and 255");
+		error_exit(ERR_COLOR_RANGE);
 	return (1);
 }
+
 static int	parse_rgb(char *str, t_color *color)
 {
 	char	**split;
@@ -44,7 +45,7 @@ static int	parse_rgb(char *str, t_color *color)
 		while (i >= 0)
 			free(split[i--]);
 		free(split);
-		error_exit("Error\nInvalid color format - expected R,G,B");
+		error_exit(ERR_COLOR);
 	}
 	return (set_rgb_values(split, color));
 }
@@ -56,7 +57,7 @@ int	parse_colors(char *line, t_map *map)
 
 	trim = ft_strtrim(line + 1, " \t");
 	if (!trim)
-		error_exit("Error\nMemory allocation failed");
+		error_exit(ERR_MALLOC);
 	if (line[0] == 'F')
 		ret = parse_rgb(trim, &map->floor);
 	else if (line[0] == 'C')

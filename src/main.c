@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:32:51 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/20 16:06:12 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/20 17:02:26 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ t_map	*init_map(void)
 
 	map = (t_map *)malloc(sizeof(t_map));
 	if (!map)
-		error_exit("Memory allocation failed");
+		error_exit(ERR_MALLOC);
 	map->grid = NULL;
 	map->width = 0;
 	map->height = 0;
@@ -72,10 +72,10 @@ t_game	*init_game(void)
 
 	game = (t_game *)malloc(sizeof(t_game));
 	if (!game)
-		error_exit("Memory allocation failed");
+		error_exit(ERR_MALLOC);
 	game->mlx = mlx_init();
 	if (!game->mlx)
-		error_exit("MLX initialization failed");
+		error_exit(ERR_MALLOC);
 	game->win = NULL;
 	game->map = init_map();
 	return (game);
@@ -103,16 +103,11 @@ int	main(int argc, char **argv)
 
 	if (argc != 2)
 		error_exit(ERR_USAGE);
-	
 	game = init_game();
 	if (!game)
 		error_exit(ERR_MALLOC);
-	
 	if (!parse_map(argv[1], game->map))
 		error_exit(ERR_MAP);
-	
-	// Rest of the game initialization will go here
-	
 	cleanup_game(game);
 	return (0);
 }

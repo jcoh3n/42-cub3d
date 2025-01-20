@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:28 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/20 16:51:55 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/20 17:02:43 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	check_textures(t_map *map)
 {
 	if (!map->north.path || !map->south.path || !map->west.path
 		|| !map->east.path)
-		error_exit("Error\nMissing texture definition");
+		error_exit(ERR_TEXTURE);
 	return (check_texture_files(map));
 }
 
@@ -54,7 +54,7 @@ int	check_texture_files(t_map *map)
 		|| !check_single_texture(map->south.path)
 		|| !check_single_texture(map->west.path)
 		|| !check_single_texture(map->east.path))
-		error_exit("Error\nCannot access one or more texture files");
+		error_exit(ERR_TEXTURE_ACCESS);
 	return (1);
 }
 
@@ -65,7 +65,7 @@ int	parse_textures(char *line, t_map *map)
 
 	trim = ft_strtrim(line + 2, " \t");
 	if (!trim)
-		error_exit("Error\nMemory allocation failed");
+		error_exit(ERR_MALLOC);
 	texture = get_texture_direction(line, map);
 	if (!texture)
 	{
@@ -75,7 +75,7 @@ int	parse_textures(char *line, t_map *map)
 	if (texture->path)
 	{
 		free(trim);
-		error_exit("Error\nDuplicate texture definition");
+		error_exit(ERR_TEXTURE);
 	}
 	texture->path = trim;
 	return (1);

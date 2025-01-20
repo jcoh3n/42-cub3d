@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:24 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/20 16:09:51 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/20 17:02:30 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,7 @@ int	flood_fill(char **map, int x, int y, t_dims dims)
 		return (0);
 	if (map[y][x] == '1' || map[y][x] == 'F')
 		return (1);
-	
 	map[y][x] = 'F';
-	
 	if (!flood_fill(map, x + 1, y, dims))
 		return (0);
 	if (!flood_fill(map, x - 1, y, dims))
@@ -31,7 +29,6 @@ int	flood_fill(char **map, int x, int y, t_dims dims)
 		return (0);
 	if (!flood_fill(map, x, y - 1, dims))
 		return (0);
-	
 	return (1);
 }
 
