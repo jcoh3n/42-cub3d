@@ -1,7 +1,7 @@
 NAME = cub3D
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -I./includes -I./lib/libft -I./lib/minilibx-linux
+CFLAGS = -Wall -Wextra -Werror -g3 -I./includes -I./lib/libft -I./lib/minilibx-linux
 LDFLAGS = -L./lib/libft -L./lib/minilibx-linux
 LDLIBS = -lft -lmlx -lXext -lX11 -lm
 

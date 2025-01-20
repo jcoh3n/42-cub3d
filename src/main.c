@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 15:32:51 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/20 19:27:23 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/21 00:46:37 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ t_game	*init_game(void)
 	game->window_focused = 1;
 	return (game);
 }
-
 
 int	game_loop(t_game *game)
 {

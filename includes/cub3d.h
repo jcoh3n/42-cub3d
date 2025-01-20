@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 19:30:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/21 00:36:08 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/21 00:46:50 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <fcntl.h>
 # include <math.h>
 # include <mlx.h>
+# include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -63,121 +64,134 @@
 /* Color Structure */
 typedef struct s_color
 {
-	int			r;
-	int			g;
-	int			b;
-}				t_color;
+	int						r;
+	int						g;
+	int						b;
+}							t_color;
 
 /* Image Structure */
 typedef struct s_img
 {
-	void		*img;
-	char		*addr;
-	int			bits_per_pixel;
-	int			line_length;
-	int			endian;
-	int			width;
-	int			height;
-}				t_img;
+	void					*img;
+	char					*addr;
+	int						bits_per_pixel;
+	int						line_length;
+	int						endian;
+	int						width;
+	int						height;
+}							t_img;
 
 /* Texture Structure */
 typedef struct s_texture
 {
-	void		*img;
-	char		*path;
-	int			width;
-	int			height;
-}				t_texture;
+	void					*img;
+	char					*path;
+	int						width;
+	int						height;
+}							t_texture;
 
 /* Map Structure */
 typedef struct s_map
 {
-	char		**grid;
-	int			width;
-	int			height;
-	char		player_dir;
-	double		player_x;
-	double		player_y;
-	t_color		floor;
-	t_color		ceiling;
-	t_texture	north;
-	t_texture	south;
-	t_texture	east;
-	t_texture	west;
-}				t_map;
+	char					**grid;
+	int						width;
+	int						height;
+	char					player_dir;
+	double					player_x;
+	double					player_y;
+	t_color					floor;
+	t_color					ceiling;
+	t_texture				north;
+	t_texture				south;
+	t_texture				east;
+	t_texture				west;
+}							t_map;
 
 /* Game Structure */
 typedef struct s_game
 {
-	void		*mlx;
-	void		*win;
-	t_map		*map;
-	t_img		img;
-	int			is_running;
-	int			window_focused;
-}				t_game;
+	void					*mlx;
+	void					*win;
+	t_map					*map;
+	t_img					img;
+	int						is_running;
+	int						window_focused;
+}							t_game;
 
 /* Dimensions Structure */
 typedef struct s_dims
 {
-	int			width;
-	int			height;
-}				t_dims;
+	int						width;
+	int						height;
+}							t_dims;
+
+/* Memory tracking structure */
+typedef struct s_memory_track
+{
+	void					*ptr;
+	char					*allocation_point;
+	struct s_memory_track	*next;
+}							t_memory_track;
 
 /* Main Functions */
-void			error_exit(char *message);
-void			free_map(t_map *map);
-void			cleanup_game(t_game *game);
-t_game			*init_game(void);
-t_map			*init_map(void);
+void						error_exit(char *message);
+void						free_map(t_map *map);
+void						cleanup_game(t_game *game);
+t_game						*init_game(void);
+t_map						*init_map(void);
 
 /* Parsing Functions */
-int				parse_map(char *filename, t_map *map);
-int				handle_line(char *line, t_map *map, int *in_map);
-int				validate_map(t_map *map);
-int				parse_textures(char *line, t_map *map);
-int				parse_colors(char *line, t_map *map);
-int				check_textures(t_map *map);
-int				store_map_line(t_map *map, char *line);
+int							parse_map(char *filename, t_map *map);
+int							handle_line(char *line, t_map *map, int *in_map);
+int							validate_map(t_map *map);
+int							parse_textures(char *line, t_map *map);
+int							parse_colors(char *line, t_map *map);
+int							check_textures(t_map *map);
+int							store_map_line(t_map *map, char *line);
 
 /* Window Management Functions */
-int				init_window(t_game *game);
-void			setup_window_hooks(t_game *game);
-int				handle_window_close(t_game *game);
-int				handle_window_focus(int focused, t_game *game);
-int				handle_keypress(int keycode, t_game *game);
+int							init_window(t_game *game);
+void						setup_window_hooks(t_game *game);
+int							handle_window_close(t_game *game);
+int							handle_window_focus(int focused, t_game *game);
+int							handle_keypress(int keycode, t_game *game);
 
 /* Buffer Management Functions */
-void			put_pixel(t_img *img, int x, int y, int color);
-void			clear_buffer(t_img *img);
-void			swap_buffers(t_game *game);
-void			draw_test_pattern(t_game *game);
-int				create_rgb(int r, int g, int b);
+void						put_pixel(t_img *img, int x, int y, int color);
+void						clear_buffer(t_img *img);
+void						swap_buffers(t_game *game);
+void						draw_test_pattern(t_game *game);
+int							create_rgb(int r, int g, int b);
 
 /* Texture Functions */
-int				check_texture_files(t_map *map);
-t_texture		*get_texture_direction(char *line, t_map *map);
+int							check_texture_files(t_map *map);
+t_texture					*get_texture_direction(char *line, t_map *map);
 
 /* Color Functions */
-int				set_rgb_values(char **split, t_color *color);
+int							set_rgb_values(char **split, t_color *color);
 
 /* Map Validation Functions */
-char			**create_temp_map(t_map *map);
-void			free_temp_map(char **temp_map);
-int				check_line_consistency(t_map *map, int i, int len);
-int				check_surrounding_walls(t_map *map, int i, int j);
-int				check_map_consistency(t_map *map);
-int				flood_fill(char **map, int x, int y, t_dims dims);
-int				is_map_char(char c);
+char						**create_temp_map(t_map *map);
+void						free_temp_map(char **temp_map);
+int							check_line_consistency(t_map *map, int i, int len);
+int							check_surrounding_walls(t_map *map, int i, int j);
+int							check_map_consistency(t_map *map);
+int							flood_fill(char **map, int x, int y, t_dims dims);
+int							is_map_char(char c);
 
 /* Map Storage Functions */
-char			**create_new_grid(t_map *map, char *line, int len);
-void			update_map_grid(t_map *map, char **new_grid);
-int				check_player_position(t_map *map, char **new_grid);
-void			cleanup_map(t_map *map);
+char						**create_new_grid(t_map *map, char *line, int len);
+void						update_map_grid(t_map *map, char **new_grid);
+int							check_player_position(t_map *map, char **new_grid);
+void						cleanup_map(t_map *map);
 
 /* Map Copying Functions */
-char			**copy_map(t_map *map);
-void			free_char_array(char **array);
+char						**copy_map(t_map *map);
+void						free_char_array(char **array);
+
+/* Memory management functions */
+void						*safe_malloc(size_t size, char *allocation_point);
+void						safe_free(void **ptr);
+bool						check_leaks(void);
 
 #endif
