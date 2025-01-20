@@ -7,6 +7,7 @@ LDLIBS = -lft -lmlx -lXext -lX11 -lm
 
 # Source files
 SRCS = src/main.c \
+	   src/clean/ft_cleanup.c \
        src/parsing/parsing.c \
        src/parsing/parse_textures.c \
        src/parsing/parse_colors.c \
@@ -16,7 +17,8 @@ SRCS = src/main.c \
        src/parsing/map_consistency.c \
        src/window/window_init.c \
        src/window/window_events.c \
-       src/window/buffer_management.c
+       src/window/buffer_management.c \
+
 
 # Object files
 OBJ_DIR = objs

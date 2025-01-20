@@ -6,11 +6,11 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:22 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/20 17:10:00 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/20 19:24:03 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub3d.h"
+#include "cub3d.h"
 
 int	is_valid_position(t_map *map, int i, int j)
 {

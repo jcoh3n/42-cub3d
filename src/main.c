@@ -6,40 +6,16 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 15:32:51 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/20 19:12:13 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/20 19:27:23 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub3d.h"
+#include "cub3d.h"
 
 void	error_exit(char *message)
 {
 	printf("Error\n%s\n", message);
 	exit(1);
-}
-
-void	free_map(t_map *map)
-{
-	int	i;
-
-	if (!map)
-		return ;
-	if (map->grid)
-	{
-		i = 0;
-		while (i < map->height)
-			free(map->grid[i++]);
-		free(map->grid);
-	}
-	if (map->north.path)
-		free(map->north.path);
-	if (map->south.path)
-		free(map->south.path);
-	if (map->east.path)
-		free(map->east.path);
-	if (map->west.path)
-		free(map->west.path);
-	free(map);
 }
 
 t_map	*init_map(void)
@@ -83,23 +59,6 @@ t_game	*init_game(void)
 	return (game);
 }
 
-void	cleanup_game(t_game *game)
-{
-	if (!game)
-		return ;
-	if (game->img.img)
-		mlx_destroy_image(game->mlx, game->img.img);
-	if (game->win)
-		mlx_destroy_window(game->mlx, game->win);
-	if (game->map)
-		free_map(game->map);
-	if (game->mlx)
-	{
-		mlx_destroy_display(game->mlx);
-		free(game->mlx);
-	}
-	free(game);
-}
 
 int	game_loop(t_game *game)
 {

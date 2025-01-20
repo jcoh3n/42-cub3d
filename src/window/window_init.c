@@ -6,11 +6,11 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 15:32:51 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/20 19:13:59 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/20 19:25:44 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3d.h"
+#include "cub3d.h"
 
 static int	init_graphics_context(t_game *game)
 {
@@ -59,4 +59,4 @@ int	init_window(t_game *game)
 	}
 	game->is_running = 1;
 	return (1);
-} 
+}
