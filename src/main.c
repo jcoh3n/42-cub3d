@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/20 15:32:51 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/20 17:02:26 by jcohen           ###   ########.fr       */
+/*   Created: 2024/03/20 15:32:51 by jcohen            #+#    #+#             */
+/*   Updated: 2025/01/20 19:12:13 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ t_game	*init_game(void)
 		error_exit(ERR_MALLOC);
 	game->win = NULL;
 	game->map = init_map();
+	game->is_running = 0;
+	game->window_focused = 1;
 	return (game);
 }
 
@@ -85,6 +87,8 @@ void	cleanup_game(t_game *game)
 {
 	if (!game)
 		return ;
+	if (game->img.img)
+		mlx_destroy_image(game->mlx, game->img.img);
 	if (game->win)
 		mlx_destroy_window(game->mlx, game->win);
 	if (game->map)
@@ -95,6 +99,19 @@ void	cleanup_game(t_game *game)
 		free(game->mlx);
 	}
 	free(game);
+}
+
+int	game_loop(t_game *game)
+{
+	if (!game->is_running)
+		return (0);
+	if (game->window_focused)
+	{
+		clear_buffer(&game->img);
+		draw_test_pattern(game);
+		swap_buffers(game);
+	}
+	return (1);
 }
 
 int	main(int argc, char **argv)
@@ -108,6 +125,10 @@ int	main(int argc, char **argv)
 		error_exit(ERR_MALLOC);
 	if (!parse_map(argv[1], game->map))
 		error_exit(ERR_MAP);
-	cleanup_game(game);
+	if (!init_window(game))
+		error_exit(ERR_WINDOW_INIT);
+	setup_window_hooks(game);
+	mlx_loop_hook(game->mlx, game_loop, game);
+	mlx_loop(game->mlx);
 	return (0);
 }

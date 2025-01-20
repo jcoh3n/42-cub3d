@@ -6,14 +6,21 @@ LDFLAGS = -L./lib/libft -L./lib/minilibx-linux
 LDLIBS = -lft -lmlx -lXext -lX11 -lm
 
 # Source files
-SRC_DIR = src
-SRCS = main.c parsing.c parse_colors.c parse_textures.c \
-       map_validation.c map_flood_fill.c map_consistency.c map_store.c
+SRCS = src/main.c \
+       src/parsing/parsing.c \
+       src/parsing/parse_textures.c \
+       src/parsing/parse_colors.c \
+       src/parsing/map_validation.c \
+       src/parsing/map_store.c \
+       src/parsing/map_flood_fill.c \
+       src/parsing/map_consistency.c \
+       src/window/window_init.c \
+       src/window/window_events.c \
+       src/window/buffer_management.c
 
 # Object files
 OBJ_DIR = objs
-OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
-DEPS = $(OBJS:.o=.d)
+OBJS = $(SRCS:src/%.c=$(OBJ_DIR)/%.o)
 
 # Library files
 LIBFT = lib/libft/libft.a
@@ -26,8 +33,20 @@ RESET = \033[0m
 
 all: $(NAME)
 
+$(OBJ_DIR)/%.o: src/%.c
+	@mkdir -p $(dir $@)
+	@echo "$(BLUE)Compiling $<...$(RESET)"
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+$(NAME): $(OBJ_DIR) $(LIBFT) $(MLX) $(OBJS)
+	@echo "$(BLUE)Linking $(NAME)...$(RESET)"
+	@$(CC) $(OBJS) $(LDFLAGS) $(LDLIBS) -o $(NAME)
+	@echo "$(GREEN)Build successful!$(RESET)"
+
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
+	@mkdir -p $(OBJ_DIR)/parsing
+	@mkdir -p $(OBJ_DIR)/window
 
 $(LIBFT):
 	@echo "$(BLUE)Compiling libft...$(RESET)"
@@ -36,16 +55,6 @@ $(LIBFT):
 $(MLX):
 	@echo "$(BLUE)Compiling minilibx...$(RESET)"
 	@make -sC lib/minilibx-linux >/dev/null 2>&1
-
-$(NAME): $(OBJ_DIR) $(LIBFT) $(MLX) $(OBJS)
-	@echo "$(BLUE)Linking $(NAME)...$(RESET)"
-	@$(CC) $(OBJS) $(LDFLAGS) $(LDLIBS) -o $(NAME)
-	@echo "$(GREEN)Build successful!$(RESET)"
-
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(dir $@)
-	@echo "$(BLUE)Compiling $<...$(RESET)"
-	@$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
 
 clean:
 	@echo "$(BLUE)Cleaning object files...$(RESET)"
@@ -60,7 +69,5 @@ fclean: clean
 	@echo "$(GREEN)Clean successful!$(RESET)"
 
 re: fclean all
-
--include $(DEPS)
 
 .PHONY: all clean fclean re

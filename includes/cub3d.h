@@ -9,6 +9,13 @@
 # include <mlx.h>
 # include "libft.h"
 
+/* Window Settings */
+# define WINDOW_WIDTH 1280
+# define WINDOW_HEIGHT 720
+
+/* Key Codes */
+# define KEY_ESC 65307
+
 /* Error Messages */
 # define ERR_USAGE "Usage: ./cub3D <map.cub>"
 # define ERR_FILE "Could not open map file"
@@ -25,6 +32,9 @@
 # define ERR_MALLOC "Memory allocation failed"
 # define ERR_TEXTURE_ACCESS "Could not access texture file"
 # define ERR_MAP_EMPTY_LINE "Empty line within map"
+# define ERR_WINDOW_INIT "Failed to initialize window"
+# define ERR_IMAGE_INIT "Failed to create image"
+# define ERR_IMAGE_ADDR "Failed to get image address"
 
 /* Map Elements */
 # define EMPTY '0'
@@ -41,6 +51,18 @@ typedef struct s_color
     int g;
     int b;
 } t_color;
+
+/* Image Structure */
+typedef struct s_img
+{
+    void    *img;
+    char    *addr;
+    int     bits_per_pixel;
+    int     line_length;
+    int     endian;
+    int     width;
+    int     height;
+} t_img;
 
 /* Texture Structure */
 typedef struct s_texture
@@ -74,6 +96,9 @@ typedef struct s_game
     void    *mlx;
     void    *win;
     t_map   *map;
+    t_img   img;
+    int     is_running;
+    int     window_focused;
 } t_game;
 
 /* Dimensions Structure */
@@ -98,6 +123,20 @@ int     parse_textures(char *line, t_map *map);
 int     parse_colors(char *line, t_map *map);
 int     check_textures(t_map *map);
 int     store_map_line(t_map *map, char *line);
+
+/* Window Management Functions */
+int     init_window(t_game *game);
+void    setup_window_hooks(t_game *game);
+int     handle_window_close(t_game *game);
+int     handle_window_focus(int focused, t_game *game);
+int     handle_keypress(int keycode, t_game *game);
+
+/* Buffer Management Functions */
+void    put_pixel(t_img *img, int x, int y, int color);
+void    clear_buffer(t_img *img);
+void    swap_buffers(t_game *game);
+void    draw_test_pattern(t_game *game);
+int     create_rgb(int r, int g, int b);
 
 /* Texture Functions */
 int     check_texture_files(t_map *map);
