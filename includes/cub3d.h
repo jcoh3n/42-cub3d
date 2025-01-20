@@ -8,8 +8,6 @@
 # include <math.h>
 # include <mlx.h>
 # include "libft.h"
-# include "ft_printf.h"
-# include "get_next_line.h"
 
 /* Error Messages */
 # define ERR_USAGE "Usage: ./cub3D <map.cub>"
