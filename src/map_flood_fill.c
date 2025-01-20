@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:24 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/20 15:46:43 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/20 16:09:51 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	flood_fill(char **map, int x, int y, t_dims dims)
 {
 	if (x < 0 || x >= dims.width || y < 0 || y >= dims.height)
 		return (0);
-	if (!is_map_char(map[y][x]))
+	if (map[y][x] == ' ' || !map[y][x])
 		return (0);
 	if (map[y][x] == '1' || map[y][x] == 'F')
 		return (1);
