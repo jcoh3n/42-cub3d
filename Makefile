@@ -13,31 +13,39 @@ SRCS = main.c parsing.c parse_colors.c parse_textures.c \
 # Object files
 OBJ_DIR = objs
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
+DEPS = $(OBJS:.o=.d)
+
+# Library files
+LIBFT = lib/libft/libft.a
+MLX = lib/minilibx-linux/libmlx.a
 
 # Colors
 GREEN = \033[0;32m
 BLUE = \033[0;34m
 RESET = \033[0m
 
-all: $(OBJ_DIR) libs $(NAME)
+all: $(NAME)
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
 
-libs:
+$(LIBFT):
 	@echo "$(BLUE)Compiling libft...$(RESET)"
 	@make -sC lib/libft
+
+$(MLX):
 	@echo "$(BLUE)Compiling minilibx...$(RESET)"
 	@make -sC lib/minilibx-linux >/dev/null 2>&1
 
-$(NAME): $(OBJS)
+$(NAME): $(OBJ_DIR) $(LIBFT) $(MLX) $(OBJS)
 	@echo "$(BLUE)Linking $(NAME)...$(RESET)"
 	@$(CC) $(OBJS) $(LDFLAGS) $(LDLIBS) -o $(NAME)
 	@echo "$(GREEN)Build successful!$(RESET)"
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(dir $@)
 	@echo "$(BLUE)Compiling $<...$(RESET)"
-	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
 
 clean:
 	@echo "$(BLUE)Cleaning object files...$(RESET)"
@@ -53,4 +61,6 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re libs 
+-include $(DEPS)
+
+.PHONY: all clean fclean re
