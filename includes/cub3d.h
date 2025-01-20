@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 19:30:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/20 19:30:01 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/21 00:36:08 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,10 @@
 # define SOUTH 'S'
 # define EAST 'E'
 # define WEST 'W'
+
+/* Valid Map Characters */
+# define VALID_MAP_CHARS "01 NSEW"
+# define PLAYER_CHARS "NSEW"
 
 /* Color Structure */
 typedef struct s_color

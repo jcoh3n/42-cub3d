@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:24 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/20 19:24:03 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/21 00:28:14 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,20 +16,13 @@ int	flood_fill(char **map, int x, int y, t_dims dims)
 {
 	if (x < 0 || x >= dims.width || y < 0 || y >= dims.height)
 		return (0);
-	if (map[y][x] == ' ' || !map[y][x])
-		return (0);
+	if (map[y][x] == ' ' || map[y][x] == '\0')
+		return (1);
 	if (map[y][x] == '1' || map[y][x] == 'F')
 		return (1);
 	map[y][x] = 'F';
-	if (!flood_fill(map, x + 1, y, dims))
-		return (0);
-	if (!flood_fill(map, x - 1, y, dims))
-		return (0);
-	if (!flood_fill(map, x, y + 1, dims))
-		return (0);
-	if (!flood_fill(map, x, y - 1, dims))
-		return (0);
-	return (1);
+	return (flood_fill(map, x + 1, y, dims) && flood_fill(map, x - 1, y, dims)
+		&& flood_fill(map, x, y + 1, dims) && flood_fill(map, x, y - 1, dims));
 }
 
 char	**create_temp_map(t_map *map)

@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:26 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/20 19:24:03 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/21 00:20:12 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,18 @@ int	validate_map(t_map *map)
 	t_dims	dims;
 	int		valid;
 
-	dims.width = map->width;
-	dims.height = map->height;
 	if (!check_map_consistency(map))
 		return (0);
+	dims.width = map->width;
+	dims.height = map->height;
 	temp_map = create_temp_map(map);
+	if (!temp_map)
+		error_exit(ERR_MALLOC);
 	valid = flood_fill(temp_map, (int)map->player_x, (int)map->player_y, dims);
 	free_temp_map(temp_map);
-	return (valid);
+	if (!valid)
+		error_exit(ERR_MAP_WALLS);
+	return (1);
 }
 
 int	check_player_position(t_map *map, char **new_grid)
