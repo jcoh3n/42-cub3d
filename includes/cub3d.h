@@ -25,6 +25,8 @@
 # define ERR_PLAYER_NONE "No player position found"
 # define ERR_PLAYER_MULTIPLE "Multiple player positions found"
 # define ERR_MALLOC "Memory allocation failed"
+# define ERR_TEXTURE_ACCESS "Could not access texture file"
+# define ERR_MAP_EMPTY_LINE "Empty line within map"
 
 /* Map Elements */
 # define EMPTY '0'
@@ -93,5 +95,7 @@ void    cleanup_game(t_game *game);
 /* Initialization */
 t_game  *init_game(void);
 t_map   *init_map(void);
+
+void    cleanup_map(t_map *map);
 
 #endif 

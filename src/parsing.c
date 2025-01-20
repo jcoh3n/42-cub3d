@@ -89,10 +89,33 @@ int parse_textures(char *line, t_map *map)
 
 int check_textures(t_map *map)
 {
+    int fd;
+
     if (!map->north.path || !map->south.path || 
         !map->west.path || !map->east.path)
         error_exit(ERR_TEXTURE);
-    // TODO: Check if texture files exist and are readable
+
+    // Check if texture files exist and are readable
+    fd = open(map->north.path, O_RDONLY);
+    if (fd < 0)
+        error_exit(ERR_TEXTURE_ACCESS);
+    close(fd);
+
+    fd = open(map->south.path, O_RDONLY);
+    if (fd < 0)
+        error_exit(ERR_TEXTURE_ACCESS);
+    close(fd);
+
+    fd = open(map->west.path, O_RDONLY);
+    if (fd < 0)
+        error_exit(ERR_TEXTURE_ACCESS);
+    close(fd);
+
+    fd = open(map->east.path, O_RDONLY);
+    if (fd < 0)
+        error_exit(ERR_TEXTURE_ACCESS);
+    close(fd);
+
     return (1);
 }
 
@@ -170,6 +193,48 @@ static int store_map_line(t_map *map, char *line)
     return (1);
 }
 
+static int check_map_consistency(t_map *map)
+{
+    int i;
+    int j;
+    int len;
+
+    i = 0;
+    while (i < map->height)
+    {
+        // Check for empty lines within map
+        if (!map->grid[i][0])
+            error_exit(ERR_MAP_EMPTY_LINE);
+
+        // Check that each line has proper wall endings
+        len = ft_strlen(map->grid[i]);
+        if (map->grid[i][0] != WALL || map->grid[i][len - 1] != WALL)
+            error_exit(ERR_MAP_WALLS);
+
+        // Check for spaces adjacent to walkable areas
+        j = 1;
+        while (j < len - 1)
+        {
+            if (map->grid[i][j] != WALL && map->grid[i][j] != ' ')
+            {
+                if (i == 0 || i == map->height - 1)
+                    error_exit(ERR_MAP_WALLS);
+                if (j > 0 && map->grid[i][j-1] == ' ')
+                    error_exit(ERR_MAP_WALLS);
+                if (map->grid[i][j+1] == ' ')
+                    error_exit(ERR_MAP_WALLS);
+                if (i > 0 && (j >= ft_strlen(map->grid[i-1]) || map->grid[i-1][j] == ' '))
+                    error_exit(ERR_MAP_WALLS);
+                if (i < map->height-1 && (j >= ft_strlen(map->grid[i+1]) || map->grid[i+1][j] == ' '))
+                    error_exit(ERR_MAP_WALLS);
+            }
+            j++;
+        }
+        i++;
+    }
+    return (1);
+}
+
 int validate_map(t_map *map)
 {
     int dims[2];
@@ -179,6 +244,10 @@ int validate_map(t_map *map)
 
     if (!map->player_dir)
         error_exit(ERR_PLAYER_NONE);
+
+    // Check map consistency first
+    if (!check_map_consistency(map))
+        return (0);
 
     dims[0] = map->width;
     dims[1] = map->height;
@@ -279,4 +348,29 @@ int parse_map(char *filename, t_map *map)
     close(fd);
     check_textures(map);
     return (validate_map(map));
+}
+
+void cleanup_map(t_map *map)
+{
+    int i;
+
+    if (map->north.path)
+        free(map->north.path);
+    if (map->south.path)
+        free(map->south.path);
+    if (map->west.path)
+        free(map->west.path);
+    if (map->east.path)
+        free(map->east.path);
+    
+    if (map->grid)
+    {
+        i = 0;
+        while (i < map->height)
+            free(map->grid[i++]);
+        free(map->grid);
+    }
+    map->grid = NULL;
+    map->height = 0;
+    map->width = 0;
 } 
