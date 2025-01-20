@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:52 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/20 15:47:16 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/20 16:53:30 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	parse_map(char *filename, t_map *map)
 
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
-		error_exit(ERR_FILE);
+		error_exit("Error\nCould not open map file");
 	in_map = 0;
 	line = get_next_line(fd);
 	while (line)
@@ -61,8 +61,8 @@ int	handle_line(char *line, t_map *map, int *in_map)
 		return (store_map_line(map, line));
 	}
 	else if (*in_map && *line != '\n' && *line != '\0')
-		error_exit(ERR_MAP_CHARS);
+		error_exit("Error\nInvalid character in map");
 	else if (*in_map && (*line == '\n' || *line == '\0'))
-		error_exit(ERR_MAP_EMPTY);
+		error_exit("Error\nEmpty line within map");
 	return (1);
 }

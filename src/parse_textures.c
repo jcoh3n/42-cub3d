@@ -6,40 +6,55 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:28 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/20 15:45:08 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/20 16:51:55 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
+#include <errno.h>
+
+static int	check_single_texture(char *texture_path)
+{
+	int		fd;
+	char	*real_path;
+	size_t	len;
+	size_t	i;
+
+	len = ft_strlen(texture_path);
+	i = len - 1;
+	while (i > 0 && (texture_path[i] == '\n' || texture_path[i] == ' '))
+		i--;
+	texture_path[i + 1] = '\0';
+	if (ft_strncmp(texture_path, "./", 2) == 0)
+		real_path = ft_strdup(texture_path + 2);
+	else
+		real_path = ft_strdup(texture_path);
+	fd = open(real_path, O_RDONLY);
+	if (fd < 0)
+	{
+		free(real_path);
+		return (0);
+	}
+	close(fd);
+	free(real_path);
+	return (1);
+}
 
 int	check_textures(t_map *map)
 {
 	if (!map->north.path || !map->south.path || !map->west.path
 		|| !map->east.path)
-		error_exit(ERR_TEXTURE);
+		error_exit("Error\nMissing texture definition");
 	return (check_texture_files(map));
 }
 
 int	check_texture_files(t_map *map)
 {
-	int	fd;
-
-	fd = open(map->north.path, O_RDONLY);
-	if (fd < 0)
-		error_exit(ERR_TEXTURE_ACCESS);
-	close(fd);
-	fd = open(map->south.path, O_RDONLY);
-	if (fd < 0)
-		error_exit(ERR_TEXTURE_ACCESS);
-	close(fd);
-	fd = open(map->west.path, O_RDONLY);
-	if (fd < 0)
-		error_exit(ERR_TEXTURE_ACCESS);
-	close(fd);
-	fd = open(map->east.path, O_RDONLY);
-	if (fd < 0)
-		error_exit(ERR_TEXTURE_ACCESS);
-	close(fd);
+	if (!check_single_texture(map->north.path)
+		|| !check_single_texture(map->south.path)
+		|| !check_single_texture(map->west.path)
+		|| !check_single_texture(map->east.path))
+		error_exit("Error\nCannot access one or more texture files");
 	return (1);
 }
 
@@ -50,7 +65,7 @@ int	parse_textures(char *line, t_map *map)
 
 	trim = ft_strtrim(line + 2, " \t");
 	if (!trim)
-		error_exit(ERR_MALLOC);
+		error_exit("Error\nMemory allocation failed");
 	texture = get_texture_direction(line, map);
 	if (!texture)
 	{
@@ -60,7 +75,7 @@ int	parse_textures(char *line, t_map *map)
 	if (texture->path)
 	{
 		free(trim);
-		error_exit(ERR_TEXTURE);
+		error_exit("Error\nDuplicate texture definition");
 	}
 	texture->path = trim;
 	return (1);
