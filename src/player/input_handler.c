@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 00:54:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/21 16:00:48 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/21 16:35:32 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static void	handle_rotation_press(int keycode, t_player *player)
 		player->rotate_right = 1;
 }
 
-void	handle_movement_release(int keycode, t_player *player)
+static void	handle_movement_release(int keycode, t_player *player)
 {
 	if (keycode == KEY_W)
 		player->move_forward = 0;
@@ -44,7 +44,7 @@ void	handle_movement_release(int keycode, t_player *player)
 		player->move_right = 0;
 }
 
-void	handle_rotation_release(int keycode, t_player *player)
+static void	handle_rotation_release(int keycode, t_player *player)
 {
 	if (keycode == KEY_LEFT)
 		player->rotate_left = 0;
@@ -63,5 +63,14 @@ int	handle_player_keypress(int keycode, t_game *game)
 	}
 	handle_movement_press(keycode, &game->player);
 	handle_rotation_press(keycode, &game->player);
+	return (0);
+}
+
+int	handle_player_keyrelease(int keycode, t_game *game)
+{
+	if (!game->window_focused)
+		return (0);
+	handle_movement_release(keycode, &game->player);
+	handle_rotation_release(keycode, &game->player);
 	return (0);
 }

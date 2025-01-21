@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 19:30:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/21 16:19:12 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/21 16:33:34 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,17 +220,8 @@ void			init_player(t_game *game);
 void			update_player(t_game *game);
 int				handle_player_keypress(int keycode, t_game *game);
 int				handle_player_keyrelease(int keycode, t_game *game);
-void			handle_movement_release(int keycode, t_player *player);
 void			rotate_player(t_game *game);
-
-void			rotate_left(t_player *p);
-void			rotate_right(t_player *p);
-void			rotate_player(t_game *game);
-
-/* New Function Prototypes */
-void			update_movement(t_game *game);
 double			get_time(void);
-void			handle_rotation_release(int keycode, t_player *player);
 
 typedef enum e_bool
 {

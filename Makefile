@@ -20,7 +20,9 @@ SRCS = src/main.c \
        src/window/buffer_management.c \
        src/player/player_init.c \
        src/player/player_movement.c \
+       src/player/player_rotation.c \
        src/player/input_handler.c \
+       src/utils/time_utils.c \
 
 
 # Object files
@@ -54,6 +56,7 @@ $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)/window
 	@mkdir -p $(OBJ_DIR)/player
 	@mkdir -p $(OBJ_DIR)/clean
+	@mkdir -p $(OBJ_DIR)/utils
 
 $(LIBFT):
 	@echo "$(BLUE)Compiling libft...$(RESET)"
