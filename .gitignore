@@ -1,0 +1,6 @@
+*.md
+norme.en.pdf
+*.sh
+.gitmodules
+objs/
+*.o

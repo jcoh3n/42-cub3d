@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 15:32:51 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/21 00:57:29 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/21 01:34:02 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ int	game_loop(t_game *game)
 	{
 		update_player(game);
 		clear_buffer(&game->img);
-		draw_test_pattern(game);
 		swap_buffers(game);
 	}
 	return (1);

@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 19:30:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/21 01:30:41 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/21 01:33:55 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,7 +180,6 @@ int				handle_keypress(int keycode, t_game *game);
 void			put_pixel(t_img *img, int x, int y, int color);
 void			clear_buffer(t_img *img);
 void			swap_buffers(t_game *game);
-void			draw_test_pattern(t_game *game);
 int				create_rgb(int r, int g, int b);
 
 /* Texture Functions */
