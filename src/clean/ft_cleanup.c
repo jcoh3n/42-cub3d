@@ -6,28 +6,22 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 19:26:52 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/20 19:27:26 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/21 16:14:05 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	cleanup_game(t_game *game)
+static void	free_textures(t_map *map)
 {
-	if (!game)
-		return ;
-	if (game->img.img)
-		mlx_destroy_image(game->mlx, game->img.img);
-	if (game->win)
-		mlx_destroy_window(game->mlx, game->win);
-	if (game->map)
-		free_map(game->map);
-	if (game->mlx)
-	{
-		mlx_destroy_display(game->mlx);
-		free(game->mlx);
-	}
-	free(game);
+	if (map->north.path)
+		free(map->north.path);
+	if (map->south.path)
+		free(map->south.path);
+	if (map->east.path)
+		free(map->east.path);
+	if (map->west.path)
+		free(map->west.path);
 }
 
 void	free_map(t_map *map)
@@ -43,13 +37,27 @@ void	free_map(t_map *map)
 			free(map->grid[i++]);
 		free(map->grid);
 	}
-	if (map->north.path)
-		free(map->north.path);
-	if (map->south.path)
-		free(map->south.path);
-	if (map->east.path)
-		free(map->east.path);
-	if (map->west.path)
-		free(map->west.path);
+	free_textures(map);
 	free(map);
+}
+
+void	cleanup_game(t_game *game)
+{
+	if (!game)
+		return ;
+	if (game->img.img)
+		mlx_destroy_image(game->mlx, game->img.img);
+	if (game->win)
+		mlx_destroy_window(game->mlx, game->win);
+	if (game->map_data)
+	{
+		free_map(game->map_data);
+		game->map = NULL; // map points to map_data->grid, which is now freed
+	}
+	if (game->mlx)
+	{
+		mlx_destroy_display(game->mlx);
+		free(game->mlx);
+	}
+	free(game);
 }

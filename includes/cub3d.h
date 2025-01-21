@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 19:30:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/21 15:53:46 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/21 16:19:12 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
-# include <string.h> // For sprintf
+# include <string.h>
 # include <sys/time.h>
 # include <unistd.h>
 
@@ -152,6 +152,7 @@ typedef struct s_game
 	void		*mlx;
 	void		*win;
 	char		**map;
+	t_map		*map_data;
 	t_img		img;
 	t_player	player;
 	int			is_running;
@@ -220,6 +221,11 @@ void			update_player(t_game *game);
 int				handle_player_keypress(int keycode, t_game *game);
 int				handle_player_keyrelease(int keycode, t_game *game);
 void			handle_movement_release(int keycode, t_player *player);
+void			rotate_player(t_game *game);
+
+void			rotate_left(t_player *p);
+void			rotate_right(t_player *p);
+void			rotate_player(t_game *game);
 
 /* New Function Prototypes */
 void			update_movement(t_game *game);
@@ -230,6 +236,6 @@ typedef enum e_bool
 {
 	FALSE = 0,
 	TRUE = 1
-}   t_bool;
+}				t_bool;
 
 #endif
