@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 19:30:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/21 01:43:59 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/21 15:53:46 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,11 @@
 # include <fcntl.h>
 # include <math.h>
 # include <mlx.h>
+# include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h> // For sprintf
+# include <sys/time.h>
 # include <unistd.h>
 
 /* Window Settings */
@@ -127,6 +129,8 @@ typedef struct s_dims
 /* Player Structure */
 typedef struct s_player
 {
+	double		x;
+	double		y;
 	double		pos_x;
 	double		pos_y;
 	double		dir_x;
@@ -139,6 +143,7 @@ typedef struct s_player
 	int			move_right;
 	int			rotate_left;
 	int			rotate_right;
+	int			rotation_direction;
 }				t_player;
 
 /* Game Structure */
@@ -146,7 +151,7 @@ typedef struct s_game
 {
 	void		*mlx;
 	void		*win;
-	t_map		*map;
+	char		**map;
 	t_img		img;
 	t_player	player;
 	int			is_running;
@@ -214,8 +219,17 @@ void			init_player(t_game *game);
 void			update_player(t_game *game);
 int				handle_player_keypress(int keycode, t_game *game);
 int				handle_player_keyrelease(int keycode, t_game *game);
+void			handle_movement_release(int keycode, t_player *player);
 
 /* New Function Prototypes */
 void			update_movement(t_game *game);
+double			get_time(void);
+void			handle_rotation_release(int keycode, t_player *player);
+
+typedef enum e_bool
+{
+	FALSE = 0,
+	TRUE = 1
+}   t_bool;
 
 #endif

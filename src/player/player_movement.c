@@ -6,11 +6,11 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 00:53:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/21 01:30:32 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/21 01:53:59 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3d.h"
+#include "cub3d.h"
 
 static int	check_collision(t_game *game, double x, double y)
 {

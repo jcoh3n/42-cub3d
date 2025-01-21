@@ -6,11 +6,11 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 00:52:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/21 01:40:25 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/21 15:51:55 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3d.h"
+#include "cub3d.h"
 
 static void	init_direction_vectors(t_player *player, char direction)
 {

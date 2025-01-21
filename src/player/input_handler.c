@@ -6,11 +6,11 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 00:54:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/21 01:43:58 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/21 15:53:46 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3d.h"
+#include "cub3d.h"
 
 static void	handle_movement_press(int keycode, t_player *player)
 {
@@ -32,7 +32,7 @@ static void	handle_rotation_press(int keycode, t_player *player)
 		player->rotate_right = 1;
 }
 
-static void	handle_movement_release(int keycode, t_player *player)
+void	handle_movement_release(int keycode, t_player *player)
 {
 	if (keycode == KEY_W)
 		player->move_forward = 0;
@@ -44,7 +44,7 @@ static void	handle_movement_release(int keycode, t_player *player)
 		player->move_right = 0;
 }
 
-static void	handle_rotation_release(int keycode, t_player *player)
+void	handle_rotation_release(int keycode, t_player *player)
 {
 	if (keycode == KEY_LEFT)
 		player->rotate_left = 0;
@@ -66,7 +66,7 @@ int	handle_player_keypress(int keycode, t_game *game)
 	return (0);
 }
 
-static double	get_time(void)
+double	get_time(void)
 {
 	struct timeval	tv;
 
