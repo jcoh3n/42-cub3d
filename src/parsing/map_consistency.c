@@ -6,13 +6,13 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:22 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/21 00:35:40 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/21 01:17:27 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	is_valid_position(t_map *map, int i, int j)
+static int	is_valid_position(t_map *map, int i, int j)
 {
 	if (i <= 0 || i >= map->height - 1)
 		return (0);
@@ -68,23 +68,6 @@ int	check_map_consistency(t_map *map)
 		}
 	}
 	return (check_player_count(player_count));
-}
-
-int	is_space_valid(t_map *map, int i, int j)
-{
-	if (i == 0 || i == map->height - 1)
-		return (1);
-	if (j == 0 || j >= (int)ft_strlen(map->grid[i]) - 1)
-		return (1);
-	if (map->grid[i - 1][j] != '1' && map->grid[i - 1][j] != ' ')
-		return (1);
-	if (map->grid[i + 1][j] != '1' && map->grid[i + 1][j] != ' ')
-		return (1);
-	if (map->grid[i][j - 1] != '1' && map->grid[i][j - 1] != ' ')
-		return (1);
-	if (map->grid[i][j + 1] != '1' && map->grid[i][j + 1] != ' ')
-		return (1);
-	return (1);
 }
 
 int	check_line_consistency(t_map *map, int i, int len)

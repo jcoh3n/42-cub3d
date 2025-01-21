@@ -18,6 +18,9 @@ SRCS = src/main.c \
        src/window/window_init.c \
        src/window/window_events.c \
        src/window/buffer_management.c \
+       src/player/player_init.c \
+       src/player/player_movement.c \
+       src/player/input_handler.c \
 
 
 # Object files
@@ -49,6 +52,8 @@ $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
 	@mkdir -p $(OBJ_DIR)/parsing
 	@mkdir -p $(OBJ_DIR)/window
+	@mkdir -p $(OBJ_DIR)/player
+	@mkdir -p $(OBJ_DIR)/clean
 
 $(LIBFT):
 	@echo "$(BLUE)Compiling libft...$(RESET)"

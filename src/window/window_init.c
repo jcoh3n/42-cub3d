@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 15:32:51 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/20 19:25:44 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/21 01:00:39 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,14 @@ static int	init_frame_buffer(t_game *game)
 	return (1);
 }
 
+static void setup_input_handlers(t_game *game)
+{
+	mlx_hook(game->win, 2, 1L<<0, handle_player_keypress, game);
+	mlx_hook(game->win, 3, 1L<<1, handle_player_keyrelease, game);
+	mlx_hook(game->win, 17, 0, handle_window_close, game);
+	mlx_hook(game->win, 9, 1L<<21, handle_window_focus, game);
+}
+
 int	init_window(t_game *game)
 {
 	if (!init_graphics_context(game))
@@ -58,5 +66,8 @@ int	init_window(t_game *game)
 		error_exit(ERR_IMAGE_INIT);
 	}
 	game->is_running = 1;
+	game->window_focused = 1;
+	setup_input_handlers(game);
+	init_player(game);
 	return (1);
 }
