@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 19:30:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/21 01:18:13 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/21 01:30:41 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 # include <mlx.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <string.h> // For sprintf
 # include <unistd.h>
-# include <string.h>  // For sprintf
 
 /* Window Settings */
 # define WINDOW_WIDTH 1280
