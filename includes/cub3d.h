@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 19:30:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/21 01:33:55 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/21 01:43:59 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,6 +151,9 @@ typedef struct s_game
 	t_player	player;
 	int			is_running;
 	int			window_focused;
+	double		move_speed;
+	double		last_frame;
+	double		delta_time;
 }				t_game;
 
 /* Main Functions */
@@ -211,5 +214,8 @@ void			init_player(t_game *game);
 void			update_player(t_game *game);
 int				handle_player_keypress(int keycode, t_game *game);
 int				handle_player_keyrelease(int keycode, t_game *game);
+
+/* New Function Prototypes */
+void			update_movement(t_game *game);
 
 #endif
