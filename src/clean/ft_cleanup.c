@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 19:26:52 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/21 16:14:05 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/25 00:43:32 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	cleanup_game(t_game *game)
 	if (game->map_data)
 	{
 		free_map(game->map_data);
-		game->map = NULL; // map points to map_data->grid, which is now freed
+		game->map = NULL;
 	}
 	if (game->mlx)
 	{

@@ -6,13 +6,13 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 15:32:51 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/24 23:34:08 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/25 00:48:37 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-#include <sys/stat.h>
 #include <fcntl.h>
+#include <sys/stat.h>
 
 static int	ft_strendswith(const char *str, const char *suffix)
 {
@@ -74,8 +74,8 @@ static void	init_game_values(t_game *game)
 	game->win = NULL;
 	game->is_running = 0;
 	game->window_focused = 1;
-	game->map = NULL;            // Initialize the char** map to NULL
-	game->map_data = init_map(); // Store t_map* in map_data
+	game->map = NULL;
+	game->map_data = init_map();
 }
 
 t_game	*init_game(void)
@@ -102,19 +102,17 @@ int	game_loop(t_game *game)
 
 int	main(int argc, char **argv)
 {
-	t_game	*game;
-	int		fd;
+	t_game		*game;
+	int			fd;
+	struct stat	path_stat;
 
 	if (argc != 2)
 		error_exit(ERR_USAGE);
 	if (!ft_strendswith(argv[1], ".cub"))
 		error_exit(ERR_FILE_EXT);
-	fd = open(argv[1], O_DIRECTORY);
-	if (fd >= 0)
-	{
-		close(fd);
+	stat(argv[1], &path_stat);
+	if (S_ISDIR(path_stat.st_mode))
 		error_exit(ERR_IS_DIR);
-	}
 	fd = open(argv[1], O_RDONLY);
 	if (fd < 0)
 		error_exit(ERR_FILE);

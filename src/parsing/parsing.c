@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:52 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/24 23:34:42 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/25 00:45:16 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	is_map_char(char c)
 
 static void	check_config_complete(t_map *map)
 {
-	if (!map->north.path || !map->south.path || !map->west.path 
+	if (!map->north.path || !map->south.path || !map->west.path
 		|| !map->east.path)
 		error_exit(ERR_TEXTURE);
 	if (map->floor.r == -1 || map->ceiling.r == -1)

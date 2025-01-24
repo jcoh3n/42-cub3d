@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:27 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/24 23:32:09 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/25 00:46:40 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,6 @@ int	parse_colors(char *line, t_map *map)
 		parse_rgb(trim, &map->ceiling);
 	}
 	else
-	{
-		free(trim);
-		return (0);
-	}
-	free(trim);
-	return (1);
+		return (free(trim), 0);
+	return (free(trim), 1);
 }

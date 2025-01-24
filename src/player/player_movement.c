@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 00:53:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/24 23:41:59 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/25 00:44:05 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ static void	try_movement(t_game *game, double new_x, double new_y, t_player *p)
 		p->pos_y = new_y;
 }
 
-static void	apply_movement(t_game *game, t_player *p, double dir_x, double dir_y)
+static void	apply_movement(t_game *game, t_player *p, double dir_x,
+		double dir_y)
 {
 	double	move_distance;
 	double	new_x;

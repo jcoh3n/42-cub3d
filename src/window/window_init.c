@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 15:32:51 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/21 16:19:56 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/25 00:44:32 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	init_window(t_game *game)
 	game->window_focused = 1;
 	setup_input_handlers(game);
 	init_player(game);
-	game->move_speed = 5.0; // Adjust this value to control movement speed
+	game->move_speed = 5.0;
 	game->last_frame = (int)get_time();
 	game->delta_time = 0.0;
 	return (1);
