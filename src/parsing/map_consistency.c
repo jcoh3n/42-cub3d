@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:22 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/21 01:17:27 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/24 23:22:21 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,44 @@ static int	is_valid_position(t_map *map, int i, int j)
 	return (1);
 }
 
-static int	check_player_count(int player_count)
+static int	check_map_chars(t_map *map)
 {
-	if (player_count == 0)
-		error_exit(ERR_PLAYER_NONE);
-	if (player_count > 1)
-		error_exit(ERR_PLAYER_MULTIPLE);
+	int	i;
+	int	j;
+
+	i = -1;
+	while (++i < map->height)
+	{
+		j = -1;
+		while (map->grid[i][++j])
+		{
+			if (!is_map_char(map->grid[i][j]))
+				error_exit(ERR_MAP_CHARS);
+		}
+	}
 	return (1);
 }
 
-int	check_map_consistency(t_map *map)
+static int	check_walls(t_map *map)
+{
+	int	i;
+	int	j;
+
+	i = -1;
+	while (++i < map->height)
+	{
+		j = -1;
+		while (map->grid[i][++j])
+		{
+			if (map->grid[i][j] != '1' && map->grid[i][j] != ' '
+				&& !is_valid_position(map, i, j))
+				error_exit(ERR_MAP_WALLS);
+		}
+	}
+	return (1);
+}
+
+static int	check_player(t_map *map)
 {
 	int	i;
 	int	j;
@@ -60,14 +88,20 @@ int	check_map_consistency(t_map *map)
 		{
 			if (ft_strchr(PLAYER_CHARS, map->grid[i][j]))
 				player_count++;
-			if (!is_map_char(map->grid[i][j]))
-				error_exit(ERR_MAP_CHARS);
-			if (map->grid[i][j] != '1' && map->grid[i][j] != ' '
-				&& !is_valid_position(map, i, j))
-				error_exit(ERR_MAP_WALLS);
 		}
 	}
-	return (check_player_count(player_count));
+	if (player_count == 0)
+		error_exit(ERR_PLAYER_NONE);
+	if (player_count > 1)
+		error_exit(ERR_PLAYER_MULTIPLE);
+	return (1);
+}
+
+int	check_map_consistency(t_map *map)
+{
+	check_map_chars(map);
+	check_walls(map);
+	return (check_player(map));
 }
 
 int	check_line_consistency(t_map *map, int i, int len)

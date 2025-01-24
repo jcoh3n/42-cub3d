@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 19:30:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/24 14:56:01 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/24 22:57:11 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@
 # define ERR_TEXTURE "Missing texture configuration"
 # define ERR_TEXTURE_PATH "Invalid texture path"
 # define ERR_TEXTURE_ACCESS "Could not access texture file"
+# define ERR_TEXTURE_DUP "Duplicate texture definition"
 # define ERR_COLOR "Invalid color configuration"
 # define ERR_COLOR_RANGE "Color values must be between 0 and 255"
 # define ERR_COLOR_DUP "Duplicate color definition"

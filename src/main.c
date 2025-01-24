@@ -6,12 +6,13 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 15:32:51 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/24 14:48:24 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/24 22:57:11 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 #include <sys/stat.h>
+#include <fcntl.h>
 
 static int	ft_strendswith(const char *str, const char *suffix)
 {
@@ -102,16 +103,22 @@ int	game_loop(t_game *game)
 int	main(int argc, char **argv)
 {
 	t_game	*game;
-	struct stat path_stat;
+	int		fd;
 
 	if (argc != 2)
 		error_exit(ERR_USAGE);
-	if (stat(argv[1], &path_stat) == -1)
-		error_exit(ERR_FILE);
-	if (S_ISDIR(path_stat.st_mode))
-		error_exit(ERR_IS_DIR);
 	if (!ft_strendswith(argv[1], ".cub"))
 		error_exit(ERR_FILE_EXT);
+	fd = open(argv[1], O_DIRECTORY);
+	if (fd >= 0)
+	{
+		close(fd);
+		error_exit(ERR_IS_DIR);
+	}
+	fd = open(argv[1], O_RDONLY);
+	if (fd < 0)
+		error_exit(ERR_FILE);
+	close(fd);
 	game = init_game();
 	if (!game)
 		error_exit(ERR_MALLOC);
