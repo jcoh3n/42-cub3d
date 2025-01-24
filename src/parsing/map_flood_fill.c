@@ -6,19 +6,34 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:24 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/21 00:28:14 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/24 23:32:09 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
+static int	is_valid_position(int x, int y, t_dims dims)
+{
+	return (x >= 0 && x < dims.width && y >= 0 && y < dims.height);
+}
+
+static int	is_wall_or_visited(char c)
+{
+	return (c == '1' || c == 'F');
+}
+
+static int	is_outside_map(char c)
+{
+	return (c == ' ' || c == '\0');
+}
+
 int	flood_fill(char **map, int x, int y, t_dims dims)
 {
-	if (x < 0 || x >= dims.width || y < 0 || y >= dims.height)
+	if (!is_valid_position(x, y, dims))
 		return (0);
-	if (map[y][x] == ' ' || map[y][x] == '\0')
+	if (is_outside_map(map[y][x]))
 		return (1);
-	if (map[y][x] == '1' || map[y][x] == 'F')
+	if (is_wall_or_visited(map[y][x]))
 		return (1);
 	map[y][x] = 'F';
 	return (flood_fill(map, x + 1, y, dims) && flood_fill(map, x - 1, y, dims)

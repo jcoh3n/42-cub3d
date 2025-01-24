@@ -6,27 +6,34 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 00:53:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/21 16:32:02 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/24 23:41:59 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+static t_bool	is_wall_at(char **grid, int y, int x)
+{
+	return (grid[y][x] == '1');
+}
 
 static t_bool	check_collision(t_game *game, double new_x, double new_y)
 {
 	int		map_x;
 	int		map_y;
 	double	buffer;
+	char	**grid;
 
 	map_x = (int)new_x;
 	map_y = (int)new_y;
-	if (game->map_data->grid[map_y][map_x] == '1')
+	grid = game->map_data->grid;
+	if (is_wall_at(grid, map_y, map_x))
 		return (TRUE);
 	buffer = 0.2;
-	if (game->map_data->grid[(int)(new_y + buffer)][(int)(new_x + buffer)] == '1'
-		|| game->map_data->grid[(int)(new_y - buffer)][(int)(new_x - buffer)] == '1'
-		|| game->map_data->grid[(int)(new_y + buffer)][(int)(new_x - buffer)] == '1'
-		|| game->map_data->grid[(int)(new_y - buffer)][(int)(new_x + buffer)] == '1')
+	if (is_wall_at(grid, (int)(new_y + buffer), (int)(new_x + buffer))
+		|| is_wall_at(grid, (int)(new_y - buffer), (int)(new_x - buffer))
+		|| is_wall_at(grid, (int)(new_y + buffer), (int)(new_x - buffer))
+		|| is_wall_at(grid, (int)(new_y - buffer), (int)(new_x + buffer)))
 		return (TRUE);
 	return (FALSE);
 }

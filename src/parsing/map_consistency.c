@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:22 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/24 23:22:21 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/24 23:44:52 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,22 @@
 
 static int	is_valid_position(t_map *map, int i, int j)
 {
-	if (i <= 0 || i >= map->height - 1)
+	if (i <= 0 || i >= map->height - 1 || 
+		j <= 0 || j >= (int)ft_strlen(map->grid[i]) - 1)
 		return (0);
-	if (j <= 0 || j >= (int)ft_strlen(map->grid[i]) - 1)
-		return (0);
-	if (map->grid[i][j] == '0' || ft_strchr(PLAYER_CHARS, map->grid[i][j]))
-	{
-		if (!map->grid[i - 1][j] || (!ft_strchr(VALID_MAP_CHARS, map->grid[i
-					- 1][j])))
-			return (0);
-		if (!map->grid[i + 1][j] || (!ft_strchr(VALID_MAP_CHARS, map->grid[i
-					+ 1][j])))
-			return (0);
-		if (!map->grid[i][j - 1] || (!ft_strchr(VALID_MAP_CHARS, map->grid[i][j
-					- 1])))
-			return (0);
-		if (!map->grid[i][j + 1] || (!ft_strchr(VALID_MAP_CHARS, map->grid[i][j
-					+ 1])))
-			return (0);
-	}
-	return (1);
+	
+	// If it's not a space that needs checking, it's valid
+	if (map->grid[i][j] != '0' && !ft_strchr(PLAYER_CHARS, map->grid[i][j]))
+		return (1);
+	
+	// Check all adjacent cells in one go
+	return (map->grid[i - 1][j] && ft_strchr(VALID_MAP_CHARS, map->grid[i - 1][j])
+		&& map->grid[i + 1][j] && ft_strchr(VALID_MAP_CHARS, map->grid[i + 1][j])
+		&& map->grid[i][j - 1] && ft_strchr(VALID_MAP_CHARS, map->grid[i][j - 1])
+		&& map->grid[i][j + 1] && ft_strchr(VALID_MAP_CHARS, map->grid[i][j + 1]));
 }
 
-static int	check_map_chars(t_map *map)
+static void	check_map_chars(t_map *map)
 {
 	int	i;
 	int	j;
@@ -51,10 +44,9 @@ static int	check_map_chars(t_map *map)
 				error_exit(ERR_MAP_CHARS);
 		}
 	}
-	return (1);
 }
 
-static int	check_walls(t_map *map)
+static void	check_walls(t_map *map)
 {
 	int	i;
 	int	j;
@@ -70,10 +62,9 @@ static int	check_walls(t_map *map)
 				error_exit(ERR_MAP_WALLS);
 		}
 	}
-	return (1);
 }
 
-static int	check_player(t_map *map)
+static void	check_player(t_map *map)
 {
 	int	i;
 	int	j;
@@ -94,14 +85,13 @@ static int	check_player(t_map *map)
 		error_exit(ERR_PLAYER_NONE);
 	if (player_count > 1)
 		error_exit(ERR_PLAYER_MULTIPLE);
-	return (1);
 }
 
-int	check_map_consistency(t_map *map)
+void	check_map_consistency(t_map *map)
 {
 	check_map_chars(map);
 	check_walls(map);
-	return (check_player(map));
+	check_player(map);
 }
 
 int	check_line_consistency(t_map *map, int i, int len)

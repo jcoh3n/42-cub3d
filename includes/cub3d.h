@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 19:30:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/24 22:57:11 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/24 23:36:07 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,13 +187,12 @@ t_game			*init_game(void);
 t_map			*init_map(void);
 
 /* Parsing Functions */
-int				parse_map(char *filename, t_map *map);
-int				handle_line(char *line, t_map *map);
-int				validate_map(t_map *map);
+void			parse_map(char *filename, t_map *map);
+void			validate_map(t_map *map);
 int				parse_textures(char *line, t_map *map);
 int				parse_colors(char *line, t_map *map);
-int				check_textures(t_map *map);
-int				store_map_line(t_map *map, char *line);
+void			check_texture_files(t_map *map);
+void			store_map_line(t_map *map, char *line);
 
 /* Window Management Functions */
 int				init_window(t_game *game);
@@ -209,23 +208,17 @@ void			swap_buffers(t_game *game);
 int				create_rgb(int r, int g, int b);
 
 /* Texture Functions */
-int				check_texture_files(t_map *map);
-t_texture		*get_texture_direction(char *line, t_map *map);
-
-/* Color Functions */
-int				set_rgb_values(char **split, t_color *color);
+void			check_texture_files(t_map *map);
 
 /* Map Validation Functions */
-int				check_map_consistency(t_map *map);
-int				check_line_consistency(t_map *map, int i, int len);
+void			check_map_consistency(t_map *map);
 void			free_map_grid(char **grid);
 int				flood_fill(char **map, int x, int y, t_dims dims);
 int				is_map_char(char c);
 
 /* Map Storage Functions */
-char			**create_new_grid(t_map *map, char *line, int len);
-void			update_map_grid(t_map *map, char **new_grid);
-int				check_player_position(t_map *map, char **new_grid);
+char			**create_temp_map(t_map *map);
+void			free_temp_map(char **temp_map);
 void			cleanup_map(t_map *map);
 
 /* Map Copying Functions */

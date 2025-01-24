@@ -6,27 +6,16 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:25 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/20 19:24:03 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/24 23:32:09 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	store_map_line(t_map *map, char *line)
+static void	update_player_position(t_map *map, char *line, int len)
 {
-	char	**new_grid;
-	int		len;
-	int		i;
+	int	i;
 
-	len = ft_strlen(line);
-	if (line[len - 1] == '\n')
-		len--;
-	if (len > map->width)
-		map->width = len;
-	new_grid = create_new_grid(map, line, len);
-	if (!new_grid)
-		error_exit(ERR_MALLOC);
-	update_map_grid(map, new_grid);
 	i = 0;
 	while (line[i] && i < len)
 	{
@@ -38,7 +27,6 @@ int	store_map_line(t_map *map, char *line)
 		}
 		i++;
 	}
-	return (1);
 }
 
 static char	*create_new_line(int width, char *line, int len)
@@ -47,7 +35,7 @@ static char	*create_new_line(int width, char *line, int len)
 
 	new_line = (char *)malloc(width + 1);
 	if (!new_line)
-		return (NULL);
+		error_exit(ERR_MALLOC);
 	ft_memcpy(new_line, line, len);
 	while (len < width)
 		new_line[len++] = ' ';
@@ -62,7 +50,7 @@ static char	**init_grid_rows(t_map *map)
 
 	new_grid = (char **)malloc(sizeof(char *) * (map->height + 2));
 	if (!new_grid)
-		return (NULL);
+		error_exit(ERR_MALLOC);
 	i = 0;
 	while (i < map->height)
 	{
@@ -72,37 +60,28 @@ static char	**init_grid_rows(t_map *map)
 			while (--i >= 0)
 				free(new_grid[i]);
 			free(new_grid);
-			return (NULL);
+			error_exit(ERR_MALLOC);
 		}
 		i++;
 	}
 	return (new_grid);
 }
 
-char	**create_new_grid(t_map *map, char *line, int len)
+static char	**create_new_grid(t_map *map, char *line, int len)
 {
 	char	**new_grid;
 	char	*new_line;
 	int		i;
 
 	new_grid = init_grid_rows(map);
-	if (!new_grid)
-		error_exit(ERR_MALLOC);
 	i = map->height;
 	new_line = create_new_line(map->width, line, len);
-	if (!new_line)
-	{
-		while (--i >= 0)
-			free(new_grid[i]);
-		free(new_grid);
-		error_exit(ERR_MALLOC);
-	}
 	new_grid[i] = new_line;
 	new_grid[i + 1] = NULL;
 	return (new_grid);
 }
 
-void	update_map_grid(t_map *map, char **new_grid)
+static void	update_map_grid(t_map *map, char **new_grid)
 {
 	int	i;
 
@@ -115,4 +94,19 @@ void	update_map_grid(t_map *map, char **new_grid)
 	}
 	map->grid = new_grid;
 	map->height++;
+}
+
+void	store_map_line(t_map *map, char *line)
+{
+	char	**new_grid;
+	int		len;
+
+	len = ft_strlen(line);
+	if (line[len - 1] == '\n')
+		len--;
+	if (len > map->width)
+		map->width = len;
+	new_grid = create_new_grid(map, line, len);
+	update_map_grid(map, new_grid);
+	update_player_position(map, line, len);
 }

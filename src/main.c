@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 15:32:51 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/24 22:57:11 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/24 23:34:08 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,8 +122,7 @@ int	main(int argc, char **argv)
 	game = init_game();
 	if (!game)
 		error_exit(ERR_MALLOC);
-	if (!parse_map(argv[1], game->map_data))
-		error_exit(ERR_MAP);
+	parse_map(argv[1], game->map_data);
 	if (!init_window(game))
 		error_exit(ERR_WINDOW_INIT);
 	game->map = game->map_data->grid;

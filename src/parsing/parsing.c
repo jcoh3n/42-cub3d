@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:52 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/24 23:17:36 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/24 23:34:42 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,16 @@ int	is_map_char(char c)
 		|| c == WEST || c == ' ');
 }
 
-int	handle_line(char *line, t_map *map)
+static void	check_config_complete(t_map *map)
+{
+	if (!map->north.path || !map->south.path || !map->west.path 
+		|| !map->east.path)
+		error_exit(ERR_TEXTURE);
+	if (map->floor.r == -1 || map->ceiling.r == -1)
+		error_exit(ERR_COLOR);
+}
+
+static void	handle_line(char *line, t_map *map)
 {
 	static t_parse_state	state = PARSE_CONFIG;
 
@@ -44,23 +53,20 @@ int	handle_line(char *line, t_map *map)
 		if (!handle_config_line(line, map))
 		{
 			state = PARSE_MAP;
-			if (!map->north.path || !map->south.path || !map->west.path 
-				|| !map->east.path)
-				error_exit(ERR_TEXTURE);
-			if (map->floor.r == -1 || map->ceiling.r == -1)
-				error_exit(ERR_COLOR);
-			return (store_map_line(map, line));
+			check_config_complete(map);
+			store_map_line(map, line);
+			return ;
 		}
-		return (1);
+		return ;
 	}
 	if (!line[0] || line[0] == '\n')
 		error_exit(ERR_MAP_EMPTY_LINE);
 	if (!is_map_char(line[0]))
 		error_exit(ERR_MAP_CHARS);
-	return (store_map_line(map, line));
+	store_map_line(map, line);
 }
 
-int	parse_map(char *filename, t_map *map)
+void	parse_map(char *filename, t_map *map)
 {
 	int		fd;
 	char	*line;
@@ -71,16 +77,11 @@ int	parse_map(char *filename, t_map *map)
 	line = get_next_line(fd);
 	while (line)
 	{
-		if (!handle_line(line, map))
-		{
-			free(line);
-			close(fd);
-			return (0);
-		}
+		handle_line(line, map);
 		free(line);
 		line = get_next_line(fd);
 	}
 	close(fd);
 	check_texture_files(map);
-	return (validate_map(map));
+	validate_map(map);
 }

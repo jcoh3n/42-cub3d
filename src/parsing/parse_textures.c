@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:28 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/24 22:57:11 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/24 23:29:53 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,33 +29,36 @@ static int	check_single_texture(char *texture_path)
 		real_path = ft_strdup(texture_path + 2);
 	else
 		real_path = ft_strdup(texture_path);
+	if (!real_path)
+		error_exit(ERR_MALLOC);
 	fd = open(real_path, O_RDONLY);
-	if (fd < 0)
-	{
-		free(real_path);
-		return (0);
-	}
-	close(fd);
 	free(real_path);
+	if (fd < 0)
+		return (0);
+	close(fd);
 	return (1);
 }
 
-int	check_textures(t_map *map)
-{
-	if (!map->north.path || !map->south.path || !map->west.path
-		|| !map->east.path)
-		error_exit(ERR_TEXTURE);
-	return (check_texture_files(map));
-}
-
-int	check_texture_files(t_map *map)
+void	check_texture_files(t_map *map)
 {
 	if (!check_single_texture(map->north.path)
 		|| !check_single_texture(map->south.path)
 		|| !check_single_texture(map->west.path)
 		|| !check_single_texture(map->east.path))
 		error_exit(ERR_TEXTURE_ACCESS);
-	return (1);
+}
+
+static t_texture	*get_texture_direction(char *line, t_map *map)
+{
+	if (!ft_strncmp(line, "NO", 2))
+		return (&map->north);
+	else if (!ft_strncmp(line, "SO", 2))
+		return (&map->south);
+	else if (!ft_strncmp(line, "WE", 2))
+		return (&map->west);
+	else if (!ft_strncmp(line, "EA", 2))
+		return (&map->east);
+	return (NULL);
 }
 
 int	parse_textures(char *line, t_map *map)
@@ -79,17 +82,4 @@ int	parse_textures(char *line, t_map *map)
 	}
 	texture->path = trim;
 	return (1);
-}
-
-t_texture	*get_texture_direction(char *line, t_map *map)
-{
-	if (!ft_strncmp(line, "NO", 2))
-		return (&map->north);
-	else if (!ft_strncmp(line, "SO", 2))
-		return (&map->south);
-	else if (!ft_strncmp(line, "WE", 2))
-		return (&map->west);
-	else if (!ft_strncmp(line, "EA", 2))
-		return (&map->east);
-	return (NULL);
 }
