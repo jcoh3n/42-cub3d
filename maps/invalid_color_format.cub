@@ -3,9 +3,10 @@ SO ./textures/greystone.xpm
 WE ./textures/purplestone.xpm
 EA ./textures/red.xpm
 
-F 220,100,0
+
+F 220,100
 C 225,30,0
 
 1111
-1X01
-1111 
+1001
+1111

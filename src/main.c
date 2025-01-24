@@ -6,11 +6,26 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 15:32:51 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/21 16:10:40 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/24 14:48:24 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+#include <sys/stat.h>
+
+static int	ft_strendswith(const char *str, const char *suffix)
+{
+	size_t	str_len;
+	size_t	suffix_len;
+
+	if (!str || !suffix)
+		return (0);
+	str_len = ft_strlen(str);
+	suffix_len = ft_strlen(suffix);
+	if (suffix_len > str_len)
+		return (0);
+	return (!ft_strcmp(str + str_len - suffix_len, suffix));
+}
 
 void	error_exit(char *message)
 {
@@ -39,6 +54,12 @@ t_map	*init_map(void)
 	map->south.path = NULL;
 	map->east.path = NULL;
 	map->west.path = NULL;
+	map->floor.r = -1;
+	map->floor.g = -1;
+	map->floor.b = -1;
+	map->ceiling.r = -1;
+	map->ceiling.g = -1;
+	map->ceiling.b = -1;
 	return (map);
 }
 
@@ -81,17 +102,24 @@ int	game_loop(t_game *game)
 int	main(int argc, char **argv)
 {
 	t_game	*game;
+	struct stat path_stat;
 
 	if (argc != 2)
 		error_exit(ERR_USAGE);
+	if (stat(argv[1], &path_stat) == -1)
+		error_exit(ERR_FILE);
+	if (S_ISDIR(path_stat.st_mode))
+		error_exit(ERR_IS_DIR);
+	if (!ft_strendswith(argv[1], ".cub"))
+		error_exit(ERR_FILE_EXT);
 	game = init_game();
 	if (!game)
 		error_exit(ERR_MALLOC);
-	if (!parse_map(argv[1], game->map_data)) // Use map_data instead of map
+	if (!parse_map(argv[1], game->map_data))
 		error_exit(ERR_MAP);
 	if (!init_window(game))
 		error_exit(ERR_WINDOW_INIT);
-	game->map = game->map_data->grid; // Assign the grid to map after parsing
+	game->map = game->map_data->grid;
 	setup_window_hooks(game);
 	mlx_loop_hook(game->mlx, game_loop, game);
 	mlx_loop(game->mlx);

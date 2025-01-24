@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:27 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/20 19:24:03 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/24 14:26:14 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,17 @@ int	parse_colors(char *line, t_map *map)
 	if (!trim)
 		error_exit(ERR_MALLOC);
 	if (line[0] == 'F')
+	{
+		if (map->floor.r != -1)
+			error_exit(ERR_COLOR_DUP);
 		ret = parse_rgb(trim, &map->floor);
+	}
 	else if (line[0] == 'C')
+	{
+		if (map->ceiling.r != -1)
+			error_exit(ERR_COLOR_DUP);
 		ret = parse_rgb(trim, &map->ceiling);
+	}
 	else
 		ret = 0;
 	free(trim);

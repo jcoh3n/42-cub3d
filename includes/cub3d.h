@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 19:30:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/21 16:33:34 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/24 14:56:01 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,22 +41,32 @@
 # define MOVE_SPEED 0.05
 # define ROT_SPEED 0.03
 
-/* Error Messages */
+/* Error Messages - File */
 # define ERR_USAGE "Usage: ./cub3D <map.cub>"
 # define ERR_FILE "Could not open map file"
+# define ERR_FILE_EXT "Invalid file extension (must be .cub)"
+# define ERR_IS_DIR "Path is a directory"
+
+/* Error Messages - Config */
+# define ERR_TEXTURE "Missing texture configuration"
+# define ERR_TEXTURE_PATH "Invalid texture path"
+# define ERR_TEXTURE_ACCESS "Could not access texture file"
+# define ERR_COLOR "Invalid color configuration"
+# define ERR_COLOR_RANGE "Color values must be between 0 and 255"
+# define ERR_COLOR_DUP "Duplicate color definition"
+
+/* Error Messages - Map */
 # define ERR_MAP "Invalid map configuration"
 # define ERR_MAP_CHARS "Invalid character in map"
 # define ERR_MAP_WALLS "Map not enclosed by walls"
 # define ERR_MAP_EMPTY "Empty line in map"
-# define ERR_TEXTURE "Missing texture configuration"
-# define ERR_TEXTURE_PATH "Invalid texture path"
-# define ERR_COLOR "Invalid color configuration"
-# define ERR_COLOR_RANGE "Color values must be between 0 and 255"
+# define ERR_MAP_EMPTY_LINE "Empty line within map"
+# define ERR_MAP_ORDER "Map must come after all other elements"
 # define ERR_PLAYER_NONE "No player position found"
 # define ERR_PLAYER_MULTIPLE "Multiple player positions found"
+
+/* Error Messages - System */
 # define ERR_MALLOC "Memory allocation failed"
-# define ERR_TEXTURE_ACCESS "Could not access texture file"
-# define ERR_MAP_EMPTY_LINE "Empty line within map"
 # define ERR_WINDOW_INIT "Failed to initialize window"
 # define ERR_IMAGE_INIT "Failed to create image"
 # define ERR_IMAGE_ADDR "Failed to get image address"
@@ -72,6 +82,12 @@
 /* Valid Map Characters */
 # define VALID_MAP_CHARS "01 NSEW"
 # define PLAYER_CHARS "NSEW"
+
+typedef enum e_parse_state
+{
+	PARSE_CONFIG,  // Parsing textures and colors
+	PARSE_MAP      // Parsing the map
+}	t_parse_state;
 
 /* Color Structure */
 typedef struct s_color
@@ -171,7 +187,7 @@ t_map			*init_map(void);
 
 /* Parsing Functions */
 int				parse_map(char *filename, t_map *map);
-int				handle_line(char *line, t_map *map, int *in_map);
+int				handle_line(char *line, t_map *map);
 int				validate_map(t_map *map);
 int				parse_textures(char *line, t_map *map);
 int				parse_colors(char *line, t_map *map);
