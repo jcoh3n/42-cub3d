@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:22 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/25 00:45:34 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/25 01:58:52 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,20 @@ static int	is_valid_position(t_map *map, int i, int j)
 	if (i <= 0 || i >= map->height - 1 || j <= 0
 		|| j >= (int)ft_strlen(map->grid[i]) - 1)
 		return (0);
+	if (map->grid[i][j] == ' ')
+		return (1);
 	if (map->grid[i][j] != '0' && !ft_strchr(PLAYER_CHARS, map->grid[i][j]))
 		return (1);
-	return (map->grid[i - 1][j] && ft_strchr(VALID_MAP_CHARS, map->grid[i
-			- 1][j]) && map->grid[i + 1][j] && ft_strchr(VALID_MAP_CHARS,
-			map->grid[i + 1][j]) && map->grid[i][j - 1]
-		&& ft_strchr(VALID_MAP_CHARS, map->grid[i][j - 1]) && map->grid[i][j
-		+ 1] && ft_strchr(VALID_MAP_CHARS, map->grid[i][j + 1]));
+	if (i > 0 && (!map->grid[i - 1][j] || map->grid[i - 1][j] == ' '))
+		return (0);
+	if (i < map->height - 1 && (!map->grid[i + 1][j] || map->grid[i
+			+ 1][j] == ' '))
+		return (0);
+	if (!map->grid[i][j - 1] || map->grid[i][j - 1] == ' ')
+		return (0);
+	if (!map->grid[i][j + 1] || map->grid[i][j + 1] == ' ')
+		return (0);
+	return (1);
 }
 
 static void	check_map_chars(t_map *map)
