@@ -22,6 +22,7 @@ SRCS = src/main.c \
        src/player/player_movement.c \
        src/utils/time_utils.c \
        src/minimap/minimap.c \
+       src/window/render.c \
 
 
 # Object files

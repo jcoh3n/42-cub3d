@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 15:00:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/25 17:06:16 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/25 17:36:40 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ void	init_minimap(t_game *game)
 	minimap->height = MINIMAP_RADIUS * 2;
 	minimap->pos_x = MINIMAP_CENTER_X - MINIMAP_RADIUS;
 	minimap->pos_y = MINIMAP_CENTER_Y - MINIMAP_RADIUS;
-
 	minimap->img = mlx_new_image(game->mlx, minimap->width, minimap->height);
 	if (!minimap->img)
 		error_exit(ERR_IMAGE_INIT);
@@ -40,8 +39,11 @@ void	init_minimap(t_game *game)
 
 static int	is_in_circle(int x, int y, int center_x, int center_y)
 {
-	int dx = x - center_x;
-	int dy = y - center_y;
+	int	dx;
+	int	dy;
+
+	dx = x - center_x;
+	dy = y - center_y;
 	return (dx * dx + dy * dy <= MINIMAP_RADIUS * MINIMAP_RADIUS);
 }
 
@@ -70,10 +72,8 @@ void	draw_square(t_game *game, int map_x, int map_y, int color)
 	int	player_offset_y;
 
 	scale = game->minimap.scale;
-	// Calculate offset from player position to center of minimap
 	player_offset_x = (int)(game->player.x * scale) - MINIMAP_RADIUS;
 	player_offset_y = (int)(game->player.y * scale) - MINIMAP_RADIUS;
-
 	y = 0;
 	while (y < scale)
 	{
@@ -95,44 +95,35 @@ void	draw_player(t_game *game)
 	int		size;
 	int		arrow_x[3];
 	int		arrow_y[3];
+	int		px;
+	int		py;
+	int		inside;
+	int		j;
 
-	// Calculate arrow size based on scale (bigger)
-	size = game->minimap.scale * 1.5;  // 1.5x scale size instead of 2x
-	if (size < 12)  // Smaller minimum size
+	size = game->minimap.scale * 1.5;
+	if (size < 12)
 		size = 12;
-
-	// Calculate direction angle
 	angle = atan2(game->player.dir_y, game->player.dir_x);
-
-	// Define arrow points for a bigger, wider triangle
-	// Point 1: tip of arrow (make it longer)
 	arrow_x[0] = MINIMAP_RADIUS + (int)(size * 1.1 * cos(angle));
 	arrow_y[0] = MINIMAP_RADIUS + (int)(size * 1.1 * sin(angle));
-	
-	// Points 2 & 3: base points with wider angle (130 degrees = 2.27 radians)
 	arrow_x[1] = MINIMAP_RADIUS + (int)(size * 0.7 * cos(angle + M_PI * 0.72));
 	arrow_y[1] = MINIMAP_RADIUS + (int)(size * 0.7 * sin(angle + M_PI * 0.72));
 	arrow_x[2] = MINIMAP_RADIUS + (int)(size * 0.7 * cos(angle - M_PI * 0.72));
 	arrow_y[2] = MINIMAP_RADIUS + (int)(size * 0.7 * sin(angle - M_PI * 0.72));
-
-	// Draw filled triangle
 	for (int y = -size * 2; y <= size * 2; y++)
 	{
 		for (int x = -size * 2; x <= size * 2; x++)
 		{
-			int px = MINIMAP_RADIUS + x;
-			int py = MINIMAP_RADIUS + y;
-			
-			// Check if point is inside triangle
-			int inside = 0;
+			px = MINIMAP_RADIUS + x;
+			py = MINIMAP_RADIUS + y;
+			inside = 0;
 			for (int i = 0; i < 3; i++)
 			{
-				int j = (i + 1) % 3;
-				if ((arrow_y[i] - arrow_y[j]) * (px - arrow_x[j]) -
-					(arrow_x[i] - arrow_x[j]) * (py - arrow_y[j]) > 0)
+				j = (i + 1) % 3;
+				if ((arrow_y[i] - arrow_y[j]) * (px - arrow_x[j]) - (arrow_x[i]
+						- arrow_x[j]) * (py - arrow_y[j]) > 0)
 					inside++;
 			}
-			
 			if (inside == 3)
 			{
 				put_pixel_minimap(game, px, py, PLAYER_COLOR);
@@ -143,19 +134,19 @@ void	draw_player(t_game *game)
 
 void	draw_border(t_game *game)
 {
-	int	x;
-	int	y;
-	int	center_x;
-	int	center_y;
+	int		x;
+	int		y;
+	int		center_x;
+	int		center_y;
+	double	rad;
 
 	center_x = MINIMAP_RADIUS;
 	center_y = MINIMAP_RADIUS;
-
-	// Draw circular border
 	for (int angle = 0; angle < 360; angle++)
 	{
-		double rad = angle * M_PI / 180;
-		for (int r = MINIMAP_RADIUS - BORDER_THICKNESS; r <= MINIMAP_RADIUS; r++)
+		rad = angle * M_PI / 180;
+		for (int r = MINIMAP_RADIUS
+			- BORDER_THICKNESS; r <= MINIMAP_RADIUS; r++)
 		{
 			x = center_x + r * cos(rad);
 			y = center_y + r * sin(rad);
@@ -188,31 +179,24 @@ void	update_minimap(t_game *game)
 	int	view_range;
 
 	clear_minimap(game);
-
-	// Calculate view range in map units
 	view_range = (MINIMAP_RADIUS / game->minimap.scale) + 1;
-
-	// Get player's map position
 	map_x = (int)game->player.x;
 	map_y = (int)game->player.y;
-
-	// Draw visible portion of map around player
 	for (y = map_y - view_range; y <= map_y + view_range; y++)
 	{
 		for (x = map_x - view_range; x <= map_x + view_range; x++)
 		{
-			if (x >= 0 && x < game->map_data->width && 
-				y >= 0 && y < game->map_data->height)
+			if (x >= 0 && x < game->map_data->width && y >= 0
+				&& y < game->map_data->height)
 			{
 				if (game->map_data->grid[y][x] == '1')
 					draw_square(game, x, y, WALL_COLOR);
-				else if (game->map_data->grid[y][x] == '0' ||
-						ft_strchr("NSEW", game->map_data->grid[y][x]))
+				else if (game->map_data->grid[y][x] == '0' || ft_strchr("NSEW",
+						game->map_data->grid[y][x]))
 					draw_square(game, x, y, FLOOR_COLOR);
 			}
 		}
 	}
-
 	draw_player(game);
 	draw_border(game);
-} 
+}

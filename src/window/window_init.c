@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 15:32:51 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/25 17:01:30 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/25 17:27:04 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ static int	init_frame_buffer(t_game *game)
 
 static void	setup_input_handlers(t_game *game)
 {
-	mlx_hook(game->win, 2, 1L << 0, handle_player_keypress, game);
-	mlx_hook(game->win, 3, 1L << 1, handle_player_keyrelease, game);
+	mlx_hook(game->win, 2, 1L << 0, handle_keypress, game);
+	mlx_hook(game->win, 3, 1L << 1, handle_keyrelease, game);
 	mlx_hook(game->win, 17, 0, handle_window_close, game);
 	mlx_hook(game->win, 9, 1L << 21, handle_window_focus, game);
 }

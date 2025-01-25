@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 19:30:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/25 17:15:26 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/25 17:27:19 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # include <unistd.h>
 
 /* Math Constants */
-#  define M_PI 3.14159265358979323846
+# define M_PI 3.14159265358979323846
 
 /* Minimap Settings */
 # define MINIMAP_SCALE 15
@@ -184,17 +184,17 @@ typedef struct s_player
 /* Minimap Structure */
 typedef struct s_minimap
 {
-    int     scale;          // Pixels per map unit
-    int     width;          // Total width in pixels
-    int     height;         // Total height in pixels
-    int     pos_x;         // Position in main window
-    int     pos_y;         // Position in main window
-    void    *img;          // Minimap image pointer
-    int     *addr;         // Image address for pixel manipulation
-    int     bits_per_pixel;
-    int     line_length;
-    int     endian;
-}   t_minimap;
+	int scale;  // Pixels per map unit
+	int width;  // Total width in pixels
+	int height; // Total height in pixels
+	int pos_x;  // Position in main window
+	int pos_y;  // Position in main window
+	void *img;  // Minimap image pointer
+	int *addr;  // Image address for pixel manipulation
+	int			bits_per_pixel;
+	int			line_length;
+	int			endian;
+}				t_minimap;
 
 /* Game Structure */
 typedef struct s_game
@@ -234,6 +234,7 @@ void			setup_window_hooks(t_game *game);
 int				handle_window_close(t_game *game);
 int				handle_window_focus(int focused, t_game *game);
 int				handle_keypress(int keycode, t_game *game);
+int				handle_keyrelease(int keycode, t_game *game);
 
 /* Buffer Management Functions */
 void			put_pixel(t_img *img, int x, int y, int color);
@@ -277,6 +278,18 @@ void			put_pixel_minimap(t_game *game, int x, int y, int color);
 
 /* Game Loop */
 int				game_loop(t_game *game);
+
+/* Function Declarations */
+void			error_exit(char *message);
+t_game			*init_game(void);
+void			init_minimap(t_game *game);
+void			init_player(t_game *game);
+int				init_window(t_game *game);
+void			parse_map(char *filename, t_map *map);
+void			setup_window_hooks(t_game *game);
+void			store_map_line(t_map *map, char *line);
+void			update_player_position(t_game *game);
+void			render_frame(t_game *game);
 
 typedef enum e_bool
 {
