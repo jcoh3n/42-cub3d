@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 17:38:04 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/25 18:06:17 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/25 18:34:12 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@
 
 /* Mouse Settings */
 # define MOUSE_ENABLED 1
-# define MOUSE_SENSITIVITY 0.009
+# define MOUSE_SENSITIVITY 0.003
 
 /* Movement Constants */
 # define MOVE_SPEED 0.02
@@ -270,6 +270,7 @@ void			free_char_array(char **array);
 /* Player Functions */
 void			init_player(t_game *game);
 void			update_player_position(t_game *game);
+void			rotate_player(t_game *game, double angle);
 int				handle_player_keypress(int keycode, t_game *game);
 int				handle_player_keyrelease(int keycode, t_game *game);
 double			get_time(void);

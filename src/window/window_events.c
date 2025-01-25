@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 16:15:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/25 18:04:39 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/25 18:34:12 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,7 @@ int	handle_mouse_move(int x, int y, t_game *game)
 	
 	int dx = x - game->player.prev_mouse_x;
 	if (dx != 0)
-		game->player.rotation_direction = (dx > 0) ? 1 : -1;
-	else
-		game->player.rotation_direction = 0;
+		rotate_player(game, dx * MOUSE_SENSITIVITY);
 	
 	mlx_mouse_move(game->mlx, game->win, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 	game->player.prev_mouse_x = WINDOW_WIDTH / 2;
