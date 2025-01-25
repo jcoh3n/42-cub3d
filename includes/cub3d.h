@@ -5,6 +5,18 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/25 17:38:04 by jcohen            #+#    #+#             */
+/*   Updated: 2025/01/25 17:38:52 by jcohen           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 19:30:00 by jcohen            #+#    #+#             */
 /*   Updated: 2025/01/25 17:27:19 by jcohen           ###   ########.fr       */
 /*                                                                            */
@@ -102,9 +114,9 @@
 
 typedef enum e_parse_state
 {
-	PARSE_CONFIG,  // Parsing textures and colors
-	PARSE_MAP      // Parsing the map
-}	t_parse_state;
+	PARSE_CONFIG,
+	PARSE_MAP
+}				t_parse_state;
 
 /* Color Structure */
 typedef struct s_color
@@ -184,13 +196,13 @@ typedef struct s_player
 /* Minimap Structure */
 typedef struct s_minimap
 {
-	int scale;  // Pixels per map unit
-	int width;  // Total width in pixels
-	int height; // Total height in pixels
-	int pos_x;  // Position in main window
-	int pos_y;  // Position in main window
-	void *img;  // Minimap image pointer
-	int *addr;  // Image address for pixel manipulation
+	int			scale;
+	int			width;
+	int			height;
+	int			pos_x;
+	int			pos_y;
+	void		*img;
+	int			*addr;
 	int			bits_per_pixel;
 	int			line_length;
 	int			endian;

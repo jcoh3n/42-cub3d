@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 16:10:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/25 17:35:31 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/25 17:39:27 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,6 @@ void	update_player_position(t_game *game)
 	double		new_x;
 	double		new_y;
 	int			collision;
-	double		old_dir_x;
-	double		old_plane_x;
 	double		old_dir_x;
 	double		old_plane_x;
 
