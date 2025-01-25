@@ -6,19 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 17:38:04 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/25 17:38:52 by jcohen           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   cub3d.h                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/20 19:30:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/25 17:27:19 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/25 18:06:17 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +52,11 @@
 # define KEY_D 100
 # define KEY_LEFT 65361
 # define KEY_RIGHT 65363
+# define KEY_M 109
+
+/* Mouse Settings */
+# define MOUSE_ENABLED 1
+# define MOUSE_SENSITIVITY 0.009
 
 /* Movement Constants */
 # define MOVE_SPEED 0.02
@@ -191,6 +184,8 @@ typedef struct s_player
 	int			rotate_left;
 	int			rotate_right;
 	int			rotation_direction;
+	int			mouse_enabled;
+	int			prev_mouse_x;
 }				t_player;
 
 /* Minimap Structure */

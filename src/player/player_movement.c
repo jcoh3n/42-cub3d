@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 16:10:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/25 17:39:27 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/25 18:04:39 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,40 @@ static int	check_collision(t_game *game, double new_x, double new_y)
 	return (0);
 }
 
+static void	handle_rotation(t_player *player)
+{
+	double	old_dir_x;
+	double	old_plane_x;
+	double	rot_speed;
+
+	if (player->rotate_left || player->rotation_direction < 0)
+	{
+		rot_speed = (player->rotation_direction < 0) ? MOUSE_SENSITIVITY : ROT_SPEED;
+		old_dir_x = player->dir_x;
+		player->dir_x = player->dir_x * cos(-rot_speed) - player->dir_y * sin(-rot_speed);
+		player->dir_y = old_dir_x * sin(-rot_speed) + player->dir_y * cos(-rot_speed);
+		old_plane_x = player->plane_x;
+		player->plane_x = player->plane_x * cos(-rot_speed) - player->plane_y * sin(-rot_speed);
+		player->plane_y = old_plane_x * sin(-rot_speed) + player->plane_y * cos(-rot_speed);
+	}
+	if (player->rotate_right || player->rotation_direction > 0)
+	{
+		rot_speed = (player->rotation_direction > 0) ? MOUSE_SENSITIVITY : ROT_SPEED;
+		old_dir_x = player->dir_x;
+		player->dir_x = player->dir_x * cos(rot_speed) - player->dir_y * sin(rot_speed);
+		player->dir_y = old_dir_x * sin(rot_speed) + player->dir_y * cos(rot_speed);
+		old_plane_x = player->plane_x;
+		player->plane_x = player->plane_x * cos(rot_speed) - player->plane_y * sin(rot_speed);
+		player->plane_y = old_plane_x * sin(rot_speed) + player->plane_y * cos(rot_speed);
+	}
+}
+
 void	update_player_position(t_game *game)
 {
 	t_player	*player;
 	double		new_x;
 	double		new_y;
 	int			collision;
-	double		old_dir_x;
-	double		old_plane_x;
 
 	player = &game->player;
 	if (player->move_forward)
@@ -105,30 +131,5 @@ void	update_player_position(t_game *game)
 		else if (collision == 3)
 			player->y = new_y;
 	}
-	if (player->rotate_left)
-	{
-		old_dir_x = player->dir_x;
-		player->dir_x = player->dir_x * cos(-ROT_SPEED) - player->dir_y
-			* sin(-ROT_SPEED);
-		player->dir_y = old_dir_x * sin(-ROT_SPEED) + player->dir_y
-			* cos(-ROT_SPEED);
-		old_plane_x = player->plane_x;
-		player->plane_x = player->plane_x * cos(-ROT_SPEED) - player->plane_y
-			* sin(-ROT_SPEED);
-		player->plane_y = old_plane_x * sin(-ROT_SPEED) + player->plane_y
-			* cos(-ROT_SPEED);
-	}
-	if (player->rotate_right)
-	{
-		old_dir_x = player->dir_x;
-		player->dir_x = player->dir_x * cos(ROT_SPEED) - player->dir_y
-			* sin(ROT_SPEED);
-		player->dir_y = old_dir_x * sin(ROT_SPEED) + player->dir_y
-			* cos(ROT_SPEED);
-		old_plane_x = player->plane_x;
-		player->plane_x = player->plane_x * cos(ROT_SPEED) - player->plane_y
-			* sin(ROT_SPEED);
-		player->plane_y = old_plane_x * sin(ROT_SPEED) + player->plane_y
-			* cos(ROT_SPEED);
-	}
+	handle_rotation(player);
 }
