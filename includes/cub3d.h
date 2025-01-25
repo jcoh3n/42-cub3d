@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 19:30:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/24 23:36:07 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/25 17:15:26 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,22 @@
 # include <sys/time.h>
 # include <unistd.h>
 
+/* Math Constants */
+#  define M_PI 3.14159265358979323846
+
+/* Minimap Settings */
+# define MINIMAP_SCALE 15
+# define MINIMAP_RADIUS 100
+# define MINIMAP_CENTER_X (WINDOW_WIDTH - MINIMAP_RADIUS - 20)
+# define MINIMAP_CENTER_Y (MINIMAP_RADIUS + 20)
+# define WALL_COLOR 0x444444
+# define FLOOR_COLOR 0x666666
+# define PLAYER_COLOR 0xFF0000
+# define PLAYER_DIR_COLOR 0xFF4444
+# define MINIMAP_BORDER_COLOR 0x222222
+# define MINIMAP_BACKGROUND 0x111111
+# define BORDER_THICKNESS 3
+
 /* Window Settings */
 # define WINDOW_WIDTH 1280
 # define WINDOW_HEIGHT 720
@@ -38,8 +54,8 @@
 # define KEY_RIGHT 65363
 
 /* Movement Constants */
-# define MOVE_SPEED 0.05
-# define ROT_SPEED 0.03
+# define MOVE_SPEED 0.02
+# define ROT_SPEED 0.003
 
 /* Error Messages - File */
 # define ERR_USAGE "Usage: ./cub3D <map.cub>"
@@ -154,6 +170,8 @@ typedef struct s_player
 	double		dir_y;
 	double		plane_x;
 	double		plane_y;
+	double		move_speed;
+	double		rot_speed;
 	int			move_forward;
 	int			move_backward;
 	int			move_left;
@@ -162,6 +180,21 @@ typedef struct s_player
 	int			rotate_right;
 	int			rotation_direction;
 }				t_player;
+
+/* Minimap Structure */
+typedef struct s_minimap
+{
+    int     scale;          // Pixels per map unit
+    int     width;          // Total width in pixels
+    int     height;         // Total height in pixels
+    int     pos_x;         // Position in main window
+    int     pos_y;         // Position in main window
+    void    *img;          // Minimap image pointer
+    int     *addr;         // Image address for pixel manipulation
+    int     bits_per_pixel;
+    int     line_length;
+    int     endian;
+}   t_minimap;
 
 /* Game Structure */
 typedef struct s_game
@@ -172,6 +205,7 @@ typedef struct s_game
 	t_map		*map_data;
 	t_img		img;
 	t_player	player;
+	t_minimap	minimap;
 	int			is_running;
 	int			window_focused;
 	double		move_speed;
@@ -227,11 +261,22 @@ void			free_char_array(char **array);
 
 /* Player Functions */
 void			init_player(t_game *game);
-void			update_player(t_game *game);
+void			update_player_position(t_game *game);
 int				handle_player_keypress(int keycode, t_game *game);
 int				handle_player_keyrelease(int keycode, t_game *game);
-void			rotate_player(t_game *game);
 double			get_time(void);
+
+/* Minimap Functions */
+void			init_minimap(t_game *game);
+void			update_minimap(t_game *game);
+void			clear_minimap(t_game *game);
+void			draw_border(t_game *game);
+void			draw_player(t_game *game);
+void			draw_square(t_game *game, int map_x, int map_y, int color);
+void			put_pixel_minimap(t_game *game, int x, int y, int color);
+
+/* Game Loop */
+int				game_loop(t_game *game);
 
 typedef enum e_bool
 {

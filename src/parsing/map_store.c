@@ -6,13 +6,13 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:25 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/24 23:32:09 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/25 17:09:41 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static void	update_player_position(t_map *map, char *line, int len)
+static void	update_player_start_position(t_map *map, char *line, int len)
 {
 	int	i;
 
@@ -108,5 +108,5 @@ void	store_map_line(t_map *map, char *line)
 		map->width = len;
 	new_grid = create_new_grid(map, line, len);
 	update_map_grid(map, new_grid);
-	update_player_position(map, line, len);
+	update_player_start_position(map, line, len);
 }

@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 15:32:51 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/25 00:48:37 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/25 16:26:57 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,10 @@ static void	init_game_values(t_game *game)
 	game->window_focused = 1;
 	game->map = NULL;
 	game->map_data = init_map();
+	game->minimap.img = NULL;
+	game->minimap.addr = NULL;
+	game->minimap.width = 0;
+	game->minimap.height = 0;
 }
 
 t_game	*init_game(void)
@@ -89,13 +93,34 @@ t_game	*init_game(void)
 
 int	game_loop(t_game *game)
 {
+	static int frame_count = 0;
+
 	if (!game->is_running)
 		return (0);
+
 	if (game->window_focused)
 	{
-		update_player(game);
-		clear_buffer(&game->img);
-		swap_buffers(game);
+		frame_count++;
+		if (frame_count % 60 == 0)  // Log every 60 frames to avoid spam
+			printf("Game loop running - frame %d\n", frame_count);
+
+		// Update game state
+		update_player_position(game);
+
+		// Clear and update minimap
+		clear_minimap(game);
+		update_minimap(game);
+
+		// Display minimap
+		if (game->minimap.img && game->win)
+		{
+			mlx_put_image_to_window(game->mlx, game->win, game->minimap.img,
+				game->minimap.pos_x, game->minimap.pos_y);
+		}
+		else
+		{
+			printf("Error: Minimap image or window is NULL\n");
+		}
 	}
 	return (1);
 }
@@ -124,7 +149,9 @@ int	main(int argc, char **argv)
 	if (!init_window(game))
 		error_exit(ERR_WINDOW_INIT);
 	game->map = game->map_data->grid;
+	init_minimap(game);
 	setup_window_hooks(game);
+	game->is_running = 1;
 	mlx_loop_hook(game->mlx, game_loop, game);
 	mlx_loop(game->mlx);
 	return (0);
