@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 17:38:04 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/27 17:26:39 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/27 18:13:42 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,12 @@
 # define KEY_RIGHT 65363
 # define KEY_M 109
 
-
 /* Movement Constants */
 # define MOVE_SPEED 0.02
-# define ROT_SPEED 0.003
+# define ROT_SPEED 0.05
+
+# define FOV 1.0472 // 60 degrees in radians
+# define WALL_STRIP_WIDTH 1
 
 /* Error Messages - File */
 # define ERR_USAGE "Usage: ./cub3D <map.cub>"
@@ -199,6 +201,17 @@ typedef struct s_minimap
 	int			endian;
 }				t_minimap;
 
+typedef struct s_ray
+{
+	double ray_angle; // Current ray angle
+	double distance;  // Distance to wall
+	int wall_hit_x;   // Wall hit coordinates
+	int			wall_hit_y;
+	int is_vertical; // Hit vertical or horizontal wall
+	int facing_up;   // Ray direction flags
+	int			facing_right;
+}				t_ray;
+
 /* Game Structure */
 typedef struct s_game
 {
@@ -215,6 +228,12 @@ typedef struct s_game
 	double		last_frame;
 	double		delta_time;
 }				t_game;
+
+typedef enum e_bool
+{
+	FALSE = 0,
+	TRUE = 1
+}				t_bool;
 
 /* Main Functions */
 void			error_exit(char *message);
@@ -294,10 +313,10 @@ void			store_map_line(t_map *map, char *line);
 void			update_player_position(t_game *game);
 void			render_frame(t_game *game);
 
-typedef enum e_bool
-{
-	FALSE = 0,
-	TRUE = 1
-}				t_bool;
+/* Raycasting Functions */
+void			cast_rays(t_game *game);
+t_ray			cast_single_ray(t_game *game, double ray_angle);
+void			render_wall_stripe(t_game *game, int x, t_ray *ray);
+int				get_wall_color(t_ray *ray);
 
 #endif

@@ -23,6 +23,7 @@ SRCS = src/main.c \
        src/utils/time_utils.c \
        src/minimap/minimap.c \
        src/window/render.c \
+       src/raycasting/raycasting.c \
 
 
 # Object files
@@ -58,6 +59,7 @@ $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)/clean
 	@mkdir -p $(OBJ_DIR)/utils
 	@mkdir -p $(OBJ_DIR)/minimap
+	@mkdir -p $(OBJ_DIR)/raycasting
 
 $(LIBFT):
 	@echo "$(BLUE)Compiling libft...$(RESET)"
