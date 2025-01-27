@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 17:38:04 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/27 17:03:27 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/27 17:26:39 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,6 @@
 # define KEY_RIGHT 65363
 # define KEY_M 109
 
-/* Mouse Settings */
-# define MOUSE_ENABLED 1
-# define MOUSE_SENSITIVITY 0.003
 
 /* Movement Constants */
 # define MOVE_SPEED 0.02
@@ -185,8 +182,6 @@ typedef struct s_player
 	int			rotate_left;
 	int			rotate_right;
 	int			rotation_direction;
-	int			mouse_enabled;
-	int			prev_mouse_x;
 }				t_player;
 
 /* Minimap Structure */
@@ -248,7 +243,6 @@ int				handle_keyrelease(int keycode, t_game *game);
 void			put_pixel(t_img *img, int x, int y, int color);
 void			clear_buffer(t_img *img);
 void			swap_buffers(t_game *game);
-int				create_rgb(int r, int g, int b);
 
 /* Texture Functions */
 void			check_texture_files(t_map *map);

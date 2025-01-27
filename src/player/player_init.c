@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 16:10:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/25 18:04:38 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/27 17:27:06 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,4 @@ void	init_player(t_game *game)
 	player->rotate_left = 0;
 	player->rotate_right = 0;
 	player->rotation_direction = 0;
-	player->mouse_enabled = MOUSE_ENABLED;
-	player->prev_mouse_x = WINDOW_WIDTH / 2;
-	if (MOUSE_ENABLED)
-		mlx_mouse_hide(game->mlx, game->win);
 }
