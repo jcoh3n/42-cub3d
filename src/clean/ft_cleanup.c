@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 19:26:52 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/25 00:43:32 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/27 17:05:02 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,13 @@ void	free_map(t_map *map)
 		while (i < map->height)
 			free(map->grid[i++]);
 		free(map->grid);
+	}
+	if (map->flood_grid)
+	{
+		i = 0;
+		while (i < map->height)
+			free(map->flood_grid[i++]);
+		free(map->flood_grid);
 	}
 	free_textures(map);
 	free(map);

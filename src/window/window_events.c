@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 16:15:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/25 18:34:12 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/27 16:53:56 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,26 @@ int	handle_window_focus(int focused, t_game *game)
 
 int	handle_mouse_move(int x, int y, t_game *game)
 {
+	static int	last_update = 0;
+	int			current_time;
+	double		dx;
+
 	(void)y;
 	if (!game->player.mouse_enabled || !game->window_focused)
 		return (0);
-	
-	int dx = x - game->player.prev_mouse_x;
-	if (dx != 0)
-		rotate_player(game, dx * MOUSE_SENSITIVITY);
-	
-	mlx_mouse_move(game->mlx, game->win, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-	game->player.prev_mouse_x = WINDOW_WIDTH / 2;
-	
+	// Limiter la fréquence de mise à jour de la souris
+	current_time = get_time() * 1000;
+	if (current_time - last_update < 16) // ~60 FPS
+		return (0);
+	last_update = current_time;
+	// Calculer la rotation de manière plus précise
+	dx = (x - WINDOW_WIDTH / 2) * MOUSE_SENSITIVITY;
+	if (fabs(dx) > 0.0001) // Éviter les micro-mouvements
+	{
+		rotate_player(game, dx);
+		mlx_mouse_move(game->mlx, game->win, WINDOW_WIDTH / 2, WINDOW_HEIGHT
+			/ 2);
+	}
 	return (0);
 }
 
@@ -63,7 +72,8 @@ int	handle_keypress(int keycode, t_game *game)
 		if (game->player.mouse_enabled)
 		{
 			mlx_mouse_hide(game->mlx, game->win);
-			mlx_mouse_move(game->mlx, game->win, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+			mlx_mouse_move(game->mlx, game->win, WINDOW_WIDTH / 2, WINDOW_HEIGHT
+				/ 2);
 		}
 		else
 			mlx_mouse_show(game->mlx, game->win);

@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 17:38:04 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/25 18:34:12 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/27 17:03:27 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,7 @@ typedef struct s_map
 	char		**grid;
 	int			width;
 	int			height;
+	char **flood_grid; // Ajout du flood_grid
 	char		player_dir;
 	double		player_x;
 	double		player_y;

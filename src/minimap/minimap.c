@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 15:00:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/25 17:36:40 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/27 17:08:33 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,16 +172,13 @@ void	clear_minimap(t_game *game)
 
 void	update_minimap(t_game *game)
 {
-	int	x;
-	int	y;
-	int	map_x;
-	int	map_y;
-	int	view_range;
+	int x, y;
+	int view_range = (MINIMAP_RADIUS / game->minimap.scale) + 1;
+	int map_x = (int)game->player.x;
+	int map_y = (int)game->player.y;
 
 	clear_minimap(game);
-	view_range = (MINIMAP_RADIUS / game->minimap.scale) + 1;
-	map_x = (int)game->player.x;
-	map_y = (int)game->player.y;
+
 	for (y = map_y - view_range; y <= map_y + view_range; y++)
 	{
 		for (x = map_x - view_range; x <= map_x + view_range; x++)
@@ -193,7 +190,12 @@ void	update_minimap(t_game *game)
 					draw_square(game, x, y, WALL_COLOR);
 				else if (game->map_data->grid[y][x] == '0' || ft_strchr("NSEW",
 						game->map_data->grid[y][x]))
-					draw_square(game, x, y, FLOOR_COLOR);
+				{
+					if (game->map_data->flood_grid[y][x] == 'F')
+						draw_square(game, x, y, FLOOR_COLOR);
+					else
+						draw_square(game, x, y, WALL_COLOR);
+				}
 			}
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 16:10:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/25 18:34:12 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/27 16:54:35 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,20 @@ void	rotate_player(t_game *game, double angle)
 {
 	double	old_dir_x;
 	double	old_plane_x;
+	double	cos_rot;
+	double	sin_rot;
 
 	old_dir_x = game->player.dir_x;
 	old_plane_x = game->player.plane_x;
-
-	game->player.dir_x = game->player.dir_x * cos(angle) - game->player.dir_y * sin(angle);
-	game->player.dir_y = old_dir_x * sin(angle) + game->player.dir_y * cos(angle);
-	game->player.plane_x = game->player.plane_x * cos(angle) - game->player.plane_y * sin(angle);
-	game->player.plane_y = old_plane_x * sin(angle) + game->player.plane_y * cos(angle);
+	cos_rot = cos(angle);
+	sin_rot = sin(angle);
+ 	game->player.dir_x = game->player.dir_x * cos_rot - game->player.dir_y
+		* sin_rot;
+	game->player.dir_y = old_dir_x * sin_rot + game->player.dir_y * cos_rot;
+	game->player.plane_x = game->player.plane_x * cos_rot - game->player.plane_y
+		* sin_rot;
+	game->player.plane_y = old_plane_x * sin_rot + game->player.plane_y
+		* cos_rot;
 }
 
 void	update_player_position(t_game *game)
