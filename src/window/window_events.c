@@ -6,11 +6,11 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 16:15:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/27 17:27:42 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/27 17:43:25 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3d.h"
+#include "cub3d.h"
 
 int	handle_window_close(t_game *game)
 {

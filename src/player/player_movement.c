@@ -6,11 +6,11 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 16:10:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/27 17:28:14 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/27 17:43:41 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3d.h"
+#include "cub3d.h"
 
 static int	check_collision(t_game *game, double new_x, double new_y)
 {
@@ -42,12 +42,10 @@ void	rotate_player(t_game *game, double angle)
 
 	old_dir_x = game->player.dir_x;
 	old_plane_x = game->player.plane_x;
-	// Rotation de la direction
 	game->player.dir_x = game->player.dir_x * cos(angle) - game->player.dir_y
 		* sin(angle);
 	game->player.dir_y = old_dir_x * sin(angle) + game->player.dir_y
 		* cos(angle);
-	// Rotation du plan de la caméra
 	game->player.plane_x = game->player.plane_x * cos(angle)
 		- game->player.plane_y * sin(angle);
 	game->player.plane_y = old_plane_x * sin(angle) + game->player.plane_y

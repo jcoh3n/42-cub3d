@@ -6,11 +6,11 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 15:00:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/27 17:08:33 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/27 17:44:08 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3d.h"
+#include "cub3d.h"
 
 void	init_minimap(t_game *game)
 {

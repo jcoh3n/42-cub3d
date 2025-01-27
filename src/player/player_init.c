@@ -6,11 +6,11 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 16:10:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/27 17:27:06 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/27 17:43:48 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3d.h"
+#include "cub3d.h"
 
 void	init_player(t_game *game)
 {

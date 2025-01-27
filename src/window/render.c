@@ -6,11 +6,11 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 17:23:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/27 17:29:06 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/27 17:43:16 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3d.h"
+#include "cub3d.h"
 
 void	render_frame(t_game *game)
 {
