@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 15:32:51 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/25 17:38:56 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/28 12:31:04 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,35 +28,29 @@ static int	ft_strendswith(const char *str, const char *suffix)
 	return (!ft_strcmp(str + str_len - suffix_len, suffix));
 }
 
-void	error_exit(char *message)
+static void	check_args(const char *filename, int argc, char **argv)
 {
-	ft_putstr_fd("Error\n", 2);
-	ft_putstr_fd(message, 2);
-	ft_putstr_fd("\n", 2);
-	exit(1);
+	int	fd;
+
+	if (!filename)
+		error_exit(ERR_FILE);
+	if (argc != 2)
+		error_exit(ERR_USAGE);
+	if (!ft_strendswith(filename, EXTENSION_NAME))
+		error_exit(ERR_FILE_EXT);
+	fd = open(argv[1], O_RDONLY);
+	if (fd < 0)
+		error_exit(ERR_FILE);
+	close(fd);
 }
 
 t_map	*init_map(void)
 {
 	t_map	*map;
 
-	map = (t_map *)malloc(sizeof(t_map));
+	map = (t_map *)ft_calloc(1, sizeof(t_map));
 	if (!map)
 		error_exit(ERR_MALLOC);
-	map->grid = NULL;
-	map->width = 0;
-	map->height = 0;
-	map->player_dir = 0;
-	map->player_x = 0;
-	map->player_y = 0;
-	map->north.img = NULL;
-	map->south.img = NULL;
-	map->east.img = NULL;
-	map->west.img = NULL;
-	map->north.path = NULL;
-	map->south.path = NULL;
-	map->east.path = NULL;
-	map->west.path = NULL;
 	map->floor.r = -1;
 	map->floor.g = -1;
 	map->floor.b = -1;
@@ -66,30 +60,18 @@ t_map	*init_map(void)
 	return (map);
 }
 
-static void	init_game_values(t_game *game)
+t_game	*init_game(void)
 {
+	t_game	*game;
+
+	game = (t_game *)ft_calloc(1, sizeof(t_game));
 	if (!game)
 		error_exit(ERR_MALLOC);
 	game->mlx = mlx_init();
 	if (!game->mlx)
 		error_exit(ERR_MALLOC);
-	game->win = NULL;
-	game->is_running = 0;
-	game->window_focused = 1;
-	game->map = NULL;
 	game->map_data = init_map();
-	game->minimap.img = NULL;
-	game->minimap.addr = NULL;
-	game->minimap.width = 0;
-	game->minimap.height = 0;
-}
-
-t_game	*init_game(void)
-{
-	t_game	*game;
-
-	game = (t_game *)malloc(sizeof(t_game));
-	init_game_values(game);
+	game->window_focused = 1;
 	return (game);
 }
 
@@ -108,20 +90,12 @@ int	game_loop(t_game *game)
 int	main(int argc, char **argv)
 {
 	t_game		*game;
-	int			fd;
 	struct stat	path_stat;
 
-	if (argc != 2)
-		error_exit(ERR_USAGE);
-	if (!ft_strendswith(argv[1], ".cub"))
-		error_exit(ERR_FILE_EXT);
+	check_args(argv[1], argc, argv);
 	stat(argv[1], &path_stat);
 	if (S_ISDIR(path_stat.st_mode))
 		error_exit(ERR_IS_DIR);
-	fd = open(argv[1], O_RDONLY);
-	if (fd < 0)
-		error_exit(ERR_FILE);
-	close(fd);
 	game = init_game();
 	if (!game)
 		error_exit(ERR_MALLOC);

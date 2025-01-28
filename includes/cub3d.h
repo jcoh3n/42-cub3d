@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 17:38:04 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/28 11:32:57 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/28 12:03:13 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@
 /* Window Settings */
 # define WINDOW_WIDTH 1280
 # define WINDOW_HEIGHT 720
+# define EXTENSION_NAME ".cub"
 
 /* Key Codes */
 # define KEY_ESC 65307
@@ -58,7 +59,8 @@
 # define MOVE_SPEED 0.05
 # define ROT_SPEED 0.03
 
-# define FOV 1.0472 // 60 degrees in radians
+# define FOV 1.0472        // 60 degrees
+# define FOV_BIGGER 1.5708 // 90 degrees
 # define WALL_STRIP_WIDTH 1
 
 /* Error Messages - File */
@@ -134,7 +136,7 @@ typedef struct s_img
 typedef struct s_texture
 {
 	void		*img;
-	char		*addr;      // Image data address
+	char		*addr;
 	char		*path;
 	int			width;
 	int			height;
@@ -149,7 +151,7 @@ typedef struct s_map
 	char		**grid;
 	int			width;
 	int			height;
-	char **flood_grid; // Ajout du flood_grid
+	char		**flood_grid;
 	char		player_dir;
 	double		player_x;
 	double		player_y;
@@ -279,18 +281,11 @@ int				is_map_char(char c);
 /* Map Storage Functions */
 char			**create_temp_map(t_map *map);
 void			free_temp_map(char **temp_map);
-void			cleanup_map(t_map *map);
-
-/* Map Copying Functions */
-char			**copy_map(t_map *map);
-void			free_char_array(char **array);
 
 /* Player Functions */
 void			init_player(t_game *game);
 void			update_player_position(t_game *game);
 void			rotate_player(t_game *game, double angle);
-int				handle_player_keypress(int keycode, t_game *game);
-int				handle_player_keyrelease(int keycode, t_game *game);
 double			get_time(void);
 
 /* Minimap Functions */
@@ -321,6 +316,5 @@ void			render_frame(t_game *game);
 void			cast_rays(t_game *game);
 t_ray			cast_single_ray(t_game *game, double ray_angle);
 void			render_wall_stripe(t_game *game, int x, t_ray *ray);
-int				get_wall_color(t_ray *ray);
 
 #endif

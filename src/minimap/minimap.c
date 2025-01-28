@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 15:00:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/27 17:44:08 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/28 12:18:05 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,10 @@ void	init_minimap(t_game *game)
 	int			line_length;
 	int			endian;
 
+	if (!game)
+		error_exit(ERR_MALLOC);
 	minimap = &game->minimap;
+	ft_bzero(minimap, sizeof(t_minimap));
 	minimap->scale = MINIMAP_SCALE;
 	minimap->width = MINIMAP_RADIUS * 2;
 	minimap->height = MINIMAP_RADIUS * 2;
