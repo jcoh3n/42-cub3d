@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:52 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/28 22:49:54 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/28 22:51:51 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,11 @@ static int	handle_config_line(char *line, t_map *map)
 	if (is_map_char(line[0]))
 	{
 		if (!map->north.path || !map->south.path || !map->west.path
-			|| !map->east.path || map->floor.r == -1 || map->ceiling.r == -1)
+			|| !map->east.path)
+			error_exit(ERR_TEXTURE);
+		if (map->floor.r == -1 || map->ceiling.r == -1)
+			error_exit(ERR_COLOR);
+		if (map->grid)
 			error_exit(ERR_MAP_ORDER);
 		return (0);
 	}
