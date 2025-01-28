@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 17:23:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/28 17:18:07 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/28 17:51:03 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,17 +60,6 @@ static void	draw_rounded_rectangle(t_img *img, int x, int y, int width,
 	}
 }
 
-static void	draw_text_centered(t_game *game, char *text, int y, int color)
-{
-	int	text_width;
-	int	x;
-
-	text_width = strlen(text) * 8; // Adjusted text width
-	x = (WINDOW_WIDTH - text_width) / 2;
-	mlx_string_put(game->mlx, game->win, x, y + STATUS_HEIGHT / 2 - 4, color,
-		text);
-}
-
 static void	draw_mouse_status(t_game *game)
 {
 	int	x;
@@ -87,13 +76,6 @@ static void	draw_mouse_status(t_game *game)
 	color = game->mouse_captured ? STATUS_ON_COLOR : STATUS_OFF_COLOR;
 	draw_rounded_rectangle(&game->img, x + 2, y + 2, STATUS_WIDTH - 4,
 		STATUS_HEIGHT - 4, color);
-	// Draw text after rendering the frame
-	if (game->win)
-	{
-		draw_text_centered(game,
-			game->mouse_captured ? STATUS_TEXT_ON : STATUS_TEXT_OFF, y,
-			STATUS_TEXT_COLOR);
-	}
 }
 
 void	render_frame(t_game *game)
