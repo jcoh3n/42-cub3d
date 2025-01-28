@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 15:32:51 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/28 11:26:54 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/28 17:17:13 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,74 +47,71 @@ static void	setup_input_handlers(t_game *game)
 {
 	mlx_hook(game->win, 2, 1L << 0, handle_keypress, game);
 	mlx_hook(game->win, 3, 1L << 1, handle_keyrelease, game);
-	mlx_hook(game->win, 17, 0, handle_window_close, game);
+	mlx_hook(game->win, 17, 1L << 17, handle_window_close, game);
 	mlx_hook(game->win, 9, 1L << 21, handle_window_focus, game);
+	mlx_hook(game->win, 6, 1L << 6, handle_mouse_move, game);
 }
 
-static int init_textures(t_game *game)
+static int	init_textures(t_game *game)
 {
-	int width;
-	int height;
-	int bits_per_pixel;
-	int line_length;
-	int endian;
+	int	width;
+	int	height;
+	int	bits_per_pixel;
+	int	line_length;
+	int	endian;
 
 	// Load North texture
-	game->map_data->north.img = mlx_xpm_file_to_image(game->mlx, 
-		game->map_data->north.path, &width, &height);
+	game->map_data->north.img = mlx_xpm_file_to_image(game->mlx,
+			game->map_data->north.path, &width, &height);
 	if (!game->map_data->north.img)
 		return (0);
 	game->map_data->north.addr = mlx_get_data_addr(game->map_data->north.img,
-		&bits_per_pixel, &line_length, &endian);
+			&bits_per_pixel, &line_length, &endian);
 	game->map_data->north.width = width;
 	game->map_data->north.height = height;
 	game->map_data->north.line_length = line_length;
 	game->map_data->north.bits_per_pixel = bits_per_pixel;
 	game->map_data->north.endian = endian;
-
 	// Load South texture
-	game->map_data->south.img = mlx_xpm_file_to_image(game->mlx, 
-		game->map_data->south.path, &width, &height);
+	game->map_data->south.img = mlx_xpm_file_to_image(game->mlx,
+			game->map_data->south.path, &width, &height);
 	if (!game->map_data->south.img)
 		return (0);
 	game->map_data->south.addr = mlx_get_data_addr(game->map_data->south.img,
-		&bits_per_pixel, &line_length, &endian);
+			&bits_per_pixel, &line_length, &endian);
 	game->map_data->south.width = width;
 	game->map_data->south.height = height;
 	game->map_data->south.line_length = line_length;
 	game->map_data->south.bits_per_pixel = bits_per_pixel;
 	game->map_data->south.endian = endian;
-
 	// Load West texture
-	game->map_data->west.img = mlx_xpm_file_to_image(game->mlx, 
-		game->map_data->west.path, &width, &height);
+	game->map_data->west.img = mlx_xpm_file_to_image(game->mlx,
+			game->map_data->west.path, &width, &height);
 	if (!game->map_data->west.img)
 		return (0);
 	game->map_data->west.addr = mlx_get_data_addr(game->map_data->west.img,
-		&bits_per_pixel, &line_length, &endian);
+			&bits_per_pixel, &line_length, &endian);
 	game->map_data->west.width = width;
 	game->map_data->west.height = height;
 	game->map_data->west.line_length = line_length;
 	game->map_data->west.bits_per_pixel = bits_per_pixel;
 	game->map_data->west.endian = endian;
-
 	// Load East texture
-	game->map_data->east.img = mlx_xpm_file_to_image(game->mlx, 
-		game->map_data->east.path, &width, &height);
+	game->map_data->east.img = mlx_xpm_file_to_image(game->mlx,
+			game->map_data->east.path, &width, &height);
 	if (!game->map_data->east.img)
 		return (0);
 	game->map_data->east.addr = mlx_get_data_addr(game->map_data->east.img,
-		&bits_per_pixel, &line_length, &endian);
+			&bits_per_pixel, &line_length, &endian);
 	game->map_data->east.width = width;
 	game->map_data->east.height = height;
 	game->map_data->east.line_length = line_length;
 	game->map_data->east.bits_per_pixel = bits_per_pixel;
 	game->map_data->east.endian = endian;
-
 	return (1);
 }
 
-void cleanup_textures(t_game *game)
+void	cleanup_textures(t_game *game)
 {
 	// North texture
 	if (game->map_data->north.img)
@@ -123,7 +120,6 @@ void cleanup_textures(t_game *game)
 		game->map_data->north.img = NULL;
 		game->map_data->north.addr = NULL;
 	}
-	
 	// South texture
 	if (game->map_data->south.img)
 	{
@@ -131,7 +127,6 @@ void cleanup_textures(t_game *game)
 		game->map_data->south.img = NULL;
 		game->map_data->south.addr = NULL;
 	}
-	
 	// West texture
 	if (game->map_data->west.img)
 	{
@@ -139,7 +134,6 @@ void cleanup_textures(t_game *game)
 		game->map_data->west.img = NULL;
 		game->map_data->west.addr = NULL;
 	}
-	
 	// East texture
 	if (game->map_data->east.img)
 	{
@@ -171,6 +165,9 @@ int	init_window(t_game *game)
 	}
 	game->is_running = 1;
 	game->window_focused = 1;
+	game->mouse_captured = 0;
+	game->last_mouse_x = MOUSE_CENTER_X;
+	game->last_mouse_y = MOUSE_CENTER_Y;
 	setup_input_handlers(game);
 	init_player(game);
 	game->last_frame = (int)get_time();

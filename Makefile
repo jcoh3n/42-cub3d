@@ -17,6 +17,7 @@ SRCS = src/main.c \
        src/parsing/map_consistency.c \
        src/window/window_init.c \
        src/window/window_events.c \
+       src/window/mouse_events.c \
        src/window/buffer_management.c \
        src/player/player_init.c \
        src/player/player_movement.c \

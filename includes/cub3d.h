@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 17:38:04 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/28 12:03:13 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/28 17:17:25 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,18 @@
 # define WINDOW_HEIGHT 720
 # define EXTENSION_NAME ".cub"
 
+/* Status Indicator Settings */
+# define STATUS_HEIGHT 25
+# define STATUS_WIDTH 100
+# define STATUS_PADDING 15
+# define STATUS_ON_COLOR 0x44FF44  // Softer green
+# define STATUS_OFF_COLOR 0xFF4444 // Softer red
+# define STATUS_BG_COLOR 0x222222  // Darker background
+# define STATUS_TEXT_COLOR 0xFFFFFF // White
+# define STATUS_ANIM_FRAMES 10     // Number of frames for animation
+# define STATUS_TEXT_ON "MOUSE ON"
+# define STATUS_TEXT_OFF "MOUSE OFF"
+
 /* Key Codes */
 # define KEY_ESC 65307
 # define KEY_W 119
@@ -59,6 +71,14 @@
 # define MOVE_SPEED 0.05
 # define ROT_SPEED 0.03
 
+/* Mouse Settings */
+# define MOUSE_SENSITIVITY 0.004  // Reduced from 0.004 for smoother control
+# define MOUSE_CAPTURE_KEY 109 // M key for toggle
+# define MOUSE_CENTER_X (WINDOW_WIDTH / 2)
+# define MOUSE_CENTER_Y (WINDOW_HEIGHT / 2)
+# define MOUSE_DEADZONE 2  // Ignore very small movements
+
+/* FOV Settings */
 # define FOV 1.0472        // 60 degrees
 # define FOV_BIGGER 1.5708 // 90 degrees
 # define WALL_STRIP_WIDTH 1
@@ -209,12 +229,12 @@ typedef struct s_minimap
 
 typedef struct s_ray
 {
-	double ray_angle; // Current ray angle
-	double distance;  // Distance to wall
-	int wall_hit_x;   // Wall hit coordinates
+	double		ray_angle;
+	double		distance;
+	int			wall_hit_x;
 	int			wall_hit_y;
-	int is_vertical; // Hit vertical or horizontal wall
-	int facing_up;   // Ray direction flags
+	int			is_vertical;
+	int			facing_up;
 	int			facing_right;
 }				t_ray;
 
@@ -233,6 +253,11 @@ typedef struct s_game
 	double		move_speed;
 	double		last_frame;
 	double		delta_time;
+	int			mouse_captured;
+	int			last_mouse_x;
+	int			last_mouse_y;
+	int			status_anim_frame;  // Current animation frame
+	int			status_transitioning;  // Whether status is animating
 }				t_game;
 
 typedef enum e_bool
@@ -316,5 +341,9 @@ void			render_frame(t_game *game);
 void			cast_rays(t_game *game);
 t_ray			cast_single_ray(t_game *game, double ray_angle);
 void			render_wall_stripe(t_game *game, int x, t_ray *ray);
+
+/* Mouse Events */
+void			toggle_mouse_capture(t_game *game);
+int				handle_mouse_move(int x, int y, t_game *game);
 
 #endif

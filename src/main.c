@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 15:32:51 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/28 12:31:04 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/28 16:56:01 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,12 @@ static void	check_args(const char *filename, int argc, char **argv)
 		error_exit(ERR_USAGE);
 	if (!ft_strendswith(filename, EXTENSION_NAME))
 		error_exit(ERR_FILE_EXT);
+	fd = open(argv[1], O_DIRECTORY | O_RDONLY);
+	if (fd >= 0)
+	{
+		close(fd);
+		error_exit(ERR_IS_DIR);
+	}
 	fd = open(argv[1], O_RDONLY);
 	if (fd < 0)
 		error_exit(ERR_FILE);
