@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 15:32:51 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/28 16:56:01 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/28 17:21:19 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,13 +95,9 @@ int	game_loop(t_game *game)
 
 int	main(int argc, char **argv)
 {
-	t_game		*game;
-	struct stat	path_stat;
+	t_game	*game;
 
 	check_args(argv[1], argc, argv);
-	stat(argv[1], &path_stat);
-	if (S_ISDIR(path_stat.st_mode))
-		error_exit(ERR_IS_DIR);
 	game = init_game();
 	if (!game)
 		error_exit(ERR_MALLOC);
