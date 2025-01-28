@@ -3,8 +3,8 @@ SO ./textures/mexicano.xpm
 WE ./textures/mexicano.xpm
 EA ./textures/mexicano.xpm
 
-F 0, 0, 0
-C 0, 0, 0
+F 0,0,0
+C 25,255,240
 
 111111111111111111111111111111
 100000000000000000000000000001

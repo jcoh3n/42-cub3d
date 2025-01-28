@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 17:38:04 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/28 17:52:12 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/28 21:14:53 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@
 # define ERR_MAP_ORDER "Map must come after all other elements"
 # define ERR_PLAYER_NONE "No player position found"
 # define ERR_PLAYER_MULTIPLE "Multiple player positions found"
+# define ERR_COLOR_FORMAT "Invalid color format"
 
 /* Error Messages - System */
 # define ERR_MALLOC "Memory allocation failed"

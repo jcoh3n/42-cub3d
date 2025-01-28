@@ -1,6 +1,6 @@
-NO      ./textures/eagle.xpm
+NO ./textures/eagle.xpm
 SO ./textures/greystone.xpm
-WE     ./textures/purplestone.xpm
+WE ./textures/purplestone.xpm
 EA ./textures/red.xpm
 
 F 20,20,20

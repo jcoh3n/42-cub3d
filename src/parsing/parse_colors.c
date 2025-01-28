@@ -6,19 +6,106 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:27 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/25 00:46:40 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/28 21:58:02 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static void	set_rgb_values(char **split, t_color *color)
+static int	is_valid_number(char *str)
 {
 	int	i;
 
-	color->r = ft_atoi(split[0]);
-	color->g = ft_atoi(split[1]);
-	color->b = ft_atoi(split[2]);
+	i = 0;
+	// Skip leading spaces
+	while (str[i] && ft_isspace(str[i]))
+		i++;
+	// Check if we have at least one digit
+	if (!str[i])
+		return (0);
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]) && !ft_isspace(str[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+static void	validate_color_format(char *str)
+{
+	int	i;
+	int	comma_count;
+	int	digit_count;
+
+	i = 0;
+	comma_count = 0;
+	digit_count = 0;
+	while (str[i])
+	{
+		if (str[i] == ',')
+		{
+			if (!digit_count)
+				error_exit(ERR_COLOR_FORMAT);
+			comma_count++;
+			digit_count = 0;
+		}
+		else if (ft_isdigit(str[i]))
+		{
+			digit_count++;
+		}
+		else if (!ft_isspace(str[i]))
+			error_exit(ERR_COLOR_FORMAT);
+		i++;
+	}
+	if (comma_count != 2 || !digit_count)
+		error_exit(ERR_COLOR_FORMAT);
+}
+
+static char	*trim_spaces(char *str)
+{
+	char	*trimmed;
+	
+	trimmed = ft_strtrim(str, " \t\n\v\f\r");
+	if (!trimmed)
+		error_exit(ERR_MALLOC);
+	return (trimmed);
+}
+
+static void	set_rgb_values(char **split, t_color *color)
+{
+	int		i;
+	char	*trimmed;
+
+	i = 0;
+	while (i < 3)
+	{
+		trimmed = trim_spaces(split[i]);
+		if (!trimmed || !*trimmed)
+		{
+			free(trimmed);
+			while (i < 3)
+				free(split[i++]);
+			free(split);
+			error_exit(ERR_COLOR_FORMAT);
+		}
+		if (!is_valid_number(trimmed))
+		{
+			free(trimmed);
+			while (i < 3)
+				free(split[i++]);
+			free(split);
+			error_exit(ERR_COLOR_FORMAT);
+		}
+		if (i == 0)
+			color->r = ft_atoi(trimmed);
+		else if (i == 1)
+			color->g = ft_atoi(trimmed);
+		else
+			color->b = ft_atoi(trimmed);
+		free(trimmed);
+		i++;
+	}
 	i = 0;
 	while (i < 3)
 		free(split[i++]);
@@ -33,6 +120,7 @@ static void	parse_rgb(char *str, t_color *color)
 	char	**split;
 	int		i;
 
+	validate_color_format(str);
 	split = ft_split(str, ',');
 	if (!split)
 		error_exit(ERR_MALLOC);
@@ -44,7 +132,7 @@ static void	parse_rgb(char *str, t_color *color)
 		while (i >= 0)
 			free(split[i--]);
 		free(split);
-		error_exit(ERR_COLOR);
+		error_exit(ERR_COLOR_FORMAT);
 	}
 	set_rgb_values(split, color);
 }
