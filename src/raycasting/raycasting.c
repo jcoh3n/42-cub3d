@@ -6,11 +6,15 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 17:55:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/27 18:06:04 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/28 11:43:28 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3d.h"
+
+#define MAX_RENDER_DISTANCE 10.0
+#define MIN_SHADE 0.3
+#define SHADE_STEP 0.7
 
 int get_wall_color(t_ray *ray)
 {
@@ -25,6 +29,74 @@ int get_wall_color(t_ray *ray)
         if (ray->facing_up)
             return (0x000000FF);  // Blue for north walls
         return (0x00FFFF00);      // Yellow for south walls
+    }
+}
+
+t_texture *get_wall_texture(t_game *game, t_ray *ray)
+{
+    if (ray->is_vertical)
+    {
+        if (ray->facing_right)
+            return (&game->map_data->east);  // East wall
+        return (&game->map_data->west);      // West wall
+    }
+    else
+    {
+        if (ray->facing_up)
+            return (&game->map_data->north);  // North wall
+        return (&game->map_data->south);      // South wall
+    }
+}
+
+int get_texture_x(t_ray *ray, t_texture *texture)
+{
+    double wall_x;
+    
+    // Calculate exact hit point on the wall
+    if (ray->is_vertical)
+        wall_x = ray->wall_hit_y + (ray->distance * sin(ray->ray_angle));
+    else
+        wall_x = ray->wall_hit_x + (ray->distance * cos(ray->ray_angle));
+    wall_x -= floor(wall_x);  // Only keep decimal part
+    
+    // Convert to texture coordinate
+    int tex_x = (int)(wall_x * (double)texture->width);
+    
+    // Flip texture coordinate if needed
+    if ((ray->is_vertical && !ray->facing_right) || (!ray->is_vertical && ray->facing_up))
+        tex_x = texture->width - tex_x - 1;
+    
+    // Ensure texture coordinate is within bounds
+    if (tex_x < 0)
+        tex_x = 0;
+    if (tex_x >= texture->width)
+        tex_x = texture->width - 1;
+        
+    return (tex_x);
+}
+
+unsigned int get_texture_color(t_texture *texture, int tex_x, int tex_y)
+{
+    char    *pixel_addr;
+    
+    // Use pre-stored texture data
+    if (!texture->addr)
+        return (0x0);  // Return black if texture data is invalid
+    
+    // Calculate pixel position using pre-stored values
+    pixel_addr = texture->addr + (tex_y * texture->line_length + tex_x * (texture->bits_per_pixel / 8));
+    
+    // Handle endianness using pre-stored value
+    if (texture->endian == 1)  // Big endian
+    {
+        return ((unsigned char)pixel_addr[0] << 24 |
+                (unsigned char)pixel_addr[1] << 16 |
+                (unsigned char)pixel_addr[2] << 8  |
+                (unsigned char)pixel_addr[3]);
+    }
+    else  // Little endian
+    {
+        return (*(unsigned int *)pixel_addr);
     }
 }
 
@@ -44,8 +116,8 @@ void render_wall_stripe(t_game *game, int x, t_ray *ray)
     // Clamp values
     if (wall_top < 0)
         wall_top = 0;
-    if (wall_bottom > WINDOW_HEIGHT)
-        wall_bottom = WINDOW_HEIGHT;
+    if (wall_bottom >= WINDOW_HEIGHT)
+        wall_bottom = WINDOW_HEIGHT - 1;
     
     // Draw ceiling
     int ceiling_color = (game->map_data->ceiling.r << 16) | 
@@ -54,10 +126,71 @@ void render_wall_stripe(t_game *game, int x, t_ray *ray)
     for (int y = 0; y < wall_top; y++)
         put_pixel(&game->img, x, y, ceiling_color);
     
-    // Draw wall
-    int wall_color = get_wall_color(ray);
+    // Get appropriate texture
+    t_texture *texture = get_wall_texture(game, ray);
+    
+    // Calculate wall X coordinate (where exactly the ray hit the wall)
+    double wall_x;
+    if (ray->is_vertical)
+        wall_x = game->player.y + ray->distance * sin(ray->ray_angle);
+    else
+        wall_x = game->player.x + ray->distance * cos(ray->ray_angle);
+    wall_x -= floor(wall_x);
+    
+    // Calculate x coordinate on the texture
+    int tex_x = (int)(wall_x * texture->width);
+    if ((ray->is_vertical && !ray->facing_right) || (!ray->is_vertical && ray->facing_up))
+        tex_x = texture->width - tex_x - 1;
+    
+    // Ensure texture coordinate is within bounds
+    tex_x = (tex_x < 0) ? 0 : tex_x;
+    tex_x = (tex_x >= texture->width) ? texture->width - 1 : tex_x;
+    
+    // Calculate texture step and position
+    double step = (double)texture->height / wall_height;
+    double tex_pos = (wall_top - WINDOW_HEIGHT / 2 + wall_height / 2) * step;
+    
+    // Calculate shading factor based on distance
+    double shade = 1.0;
+    if (perp_distance > 1.0)
+    {
+        // Calculate shade based on distance with a smoother falloff
+        shade = 1.0 - (perp_distance / MAX_RENDER_DISTANCE) * SHADE_STEP;
+        // Ensure minimum brightness
+        if (shade < MIN_SHADE)
+            shade = MIN_SHADE;
+    }
+    
+    // Draw the wall slice
     for (int y = wall_top; y < wall_bottom; y++)
-        put_pixel(&game->img, x, y, wall_color);
+    {
+        int tex_y = (int)tex_pos & (texture->height - 1);
+        
+        // Get color from texture
+        char *pixel_addr = texture->addr + (tex_y * texture->line_length + tex_x * (texture->bits_per_pixel / 8));
+        unsigned int color;
+        
+        if (texture->endian == 1)  // Big endian
+        {
+            color = ((unsigned char)pixel_addr[0] << 24 |
+                    (unsigned char)pixel_addr[1] << 16 |
+                    (unsigned char)pixel_addr[2] << 8  |
+                    (unsigned char)pixel_addr[3]);
+        }
+        else  // Little endian
+        {
+            color = *(unsigned int *)pixel_addr;
+        }
+        
+        // Apply distance-based shading
+        unsigned char r = ((color >> 16) & 0xFF) * shade;
+        unsigned char g = ((color >> 8) & 0xFF) * shade;
+        unsigned char b = (color & 0xFF) * shade;
+        
+        color = (r << 16) | (g << 8) | b;
+        put_pixel(&game->img, x, y, color);
+        tex_pos += step;
+    }
     
     // Draw floor
     int floor_color = (game->map_data->floor.r << 16) | 

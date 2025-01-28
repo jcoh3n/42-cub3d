@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 17:38:04 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/27 18:13:42 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/28 11:32:57 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@
 # define KEY_M 109
 
 /* Movement Constants */
-# define MOVE_SPEED 0.02
-# define ROT_SPEED 0.05
+# define MOVE_SPEED 0.05
+# define ROT_SPEED 0.03
 
 # define FOV 1.0472 // 60 degrees in radians
 # define WALL_STRIP_WIDTH 1
@@ -134,9 +134,13 @@ typedef struct s_img
 typedef struct s_texture
 {
 	void		*img;
+	char		*addr;      // Image data address
 	char		*path;
 	int			width;
 	int			height;
+	int			bits_per_pixel;
+	int			line_length;
+	int			endian;
 }				t_texture;
 
 /* Map Structure */
