@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 16:10:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/28 16:16:59 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/29 15:13:35 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	rotate_player(t_game *game, double angle)
 		* cos(angle);
 }
 
-void	update_player_position(t_game *game)
+static void	handle_movement(t_game *game, double dir_x, double dir_y)
 {
 	t_player	*player;
 	double		new_x;
@@ -60,68 +60,40 @@ void	update_player_position(t_game *game)
 	int			collision;
 
 	player = &game->player;
-	if (player->move_forward)
+	new_x = player->x + dir_x * MOVE_SPEED;
+	new_y = player->y + dir_y * MOVE_SPEED;
+	collision = check_collision(game, new_x, new_y);
+	if (collision == 0)
 	{
-		new_x = player->x + player->dir_x * MOVE_SPEED;
-		new_y = player->y + player->dir_y * MOVE_SPEED;
-		collision = check_collision(game, new_x, new_y);
-		if (collision == 0)
-		{
-			player->x = new_x;
-			player->y = new_y;
-		}
-		else if (collision == 2)
-			player->x = new_x;
-		else if (collision == 3)
-			player->y = new_y;
+		player->x = new_x;
+		player->y = new_y;
 	}
-	if (player->move_backward)
-	{
-		new_x = player->x - player->dir_x * MOVE_SPEED;
-		new_y = player->y - player->dir_y * MOVE_SPEED;
-		collision = check_collision(game, new_x, new_y);
-		if (collision == 0)
-		{
-			player->x = new_x;
-			player->y = new_y;
-		}
-		else if (collision == 2)
-			player->x = new_x;
-		else if (collision == 3)
-			player->y = new_y;
-	}
-	if (player->move_left)
-	{
-		new_x = player->x - player->plane_x * MOVE_SPEED;
-		new_y = player->y - player->plane_y * MOVE_SPEED;
-		collision = check_collision(game, new_x, new_y);
-		if (collision == 0)
-		{
-			player->x = new_x;
-			player->y = new_y;
-		}
-		else if (collision == 2)
-			player->x = new_x;
-		else if (collision == 3)
-			player->y = new_y;
-	}
-	if (player->move_right)
-	{
-		new_x = player->x + player->plane_x * MOVE_SPEED;
-		new_y = player->y + player->plane_y * MOVE_SPEED;
-		collision = check_collision(game, new_x, new_y);
-		if (collision == 0)
-		{
-			player->x = new_x;
-			player->y = new_y;
-		}
-		else if (collision == 2)
-			player->x = new_x;
-		else if (collision == 3)
-			player->y = new_y;
-	}
-	if (player->rotate_left)
+	else if (collision == 2)
+		player->x = new_x;
+	else if (collision == 3)
+		player->y = new_y;
+}
+
+static void	handle_rotation(t_game *game)
+{
+	if (game->player.rotate_left)
 		rotate_player(game, -ROT_SPEED);
-	if (player->rotate_right)
+	if (game->player.rotate_right)
 		rotate_player(game, ROT_SPEED);
+}
+
+void	update_player_position(t_game *game)
+{
+	t_player	*player;
+
+	player = &game->player;
+	if (player->move_forward)
+		handle_movement(game, player->dir_x, player->dir_y);
+	if (player->move_backward)
+		handle_movement(game, -player->dir_x, -player->dir_y);
+	if (player->move_left)
+		handle_movement(game, -player->plane_x, -player->plane_y);
+	if (player->move_right)
+		handle_movement(game, player->plane_x, player->plane_y);
+	handle_rotation(game);
 }
