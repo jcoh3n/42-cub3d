@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:26 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/27 17:04:14 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/29 15:48:46 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	free_map_grid(char **grid)
 	free(grid);
 }
 
-void	validate_map(t_map *map)
+void	validate_map(t_map_data *map)
 {
 	t_dims	dims;
 

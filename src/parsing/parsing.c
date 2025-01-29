@@ -6,13 +6,13 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:52 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/28 22:51:51 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/29 15:48:44 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static int	handle_config_line(char *line, t_map *map)
+static int	handle_config_line(char *line, t_map_data *map)
 {
 	if (!line[0])
 		return (1);
@@ -40,7 +40,7 @@ int	is_map_char(char c)
 		|| c == WEST || c == ' ');
 }
 
-static void	check_config_complete(t_map *map)
+static void	check_config_complete(t_map_data *map)
 {
 	if (!map->north.path || !map->south.path || !map->west.path
 		|| !map->east.path)
@@ -49,7 +49,7 @@ static void	check_config_complete(t_map *map)
 		error_exit(ERR_COLOR);
 }
 
-static void	handle_line(char *line, t_map *map)
+static void	handle_line(char *line, t_map_data *map)
 {
 	static t_parse_state	state = PARSE_CONFIG;
 
@@ -71,7 +71,7 @@ static void	handle_line(char *line, t_map *map)
 	store_map_line(map, line);
 }
 
-void	parse_map(char *filename, t_map *map)
+void	parse_map(char *filename, t_map_data *map)
 {
 	int		fd;
 	char	*line;

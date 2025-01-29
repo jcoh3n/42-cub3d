@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 17:23:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/28 20:46:00 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/29 16:07:14 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,26 +70,28 @@ static void	draw_mouse_status(t_game *game)
 	x = (WINDOW_WIDTH - STATUS_WIDTH) / 2;
 	y = STATUS_PADDING;
 	// Draw background with rounded corners
-	draw_rounded_rectangle(&game->img, x, y, STATUS_WIDTH, STATUS_HEIGHT,
-		STATUS_BG_COLOR);
+	draw_rounded_rectangle(&game->renderer.frame, x, y, STATUS_WIDTH,
+		STATUS_HEIGHT, STATUS_BG_COLOR);
 	// Draw status indicator with rounded corners (slightly smaller)
-	color = game->mouse_captured ? STATUS_ON_COLOR : STATUS_OFF_COLOR;
-	draw_rounded_rectangle(&game->img, x + 2, y + 2, STATUS_WIDTH - 4,
-		STATUS_HEIGHT - 4, color);
+	color = game->state.mouse_captured ? STATUS_ON_COLOR : STATUS_OFF_COLOR;
+	draw_rounded_rectangle(&game->renderer.frame, x + 2, y + 2, STATUS_WIDTH
+		- 4, STATUS_HEIGHT - 4, color);
 }
 
 void	render_frame(t_game *game)
 {
-	clear_buffer(&game->img);
+	clear_buffer(&game->renderer.frame);
 	cast_rays(game);
 	draw_mouse_status(game);
 	clear_minimap(game);
 	update_minimap(game);
-	if (game->win)
+	if (game->renderer.win)
 	{
-		mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
-		if (game->minimap.img)
-			mlx_put_image_to_window(game->mlx, game->win, game->minimap.img,
-				game->minimap.pos_x, game->minimap.pos_y);
+		mlx_put_image_to_window(game->renderer.mlx, game->renderer.win,
+			game->renderer.frame.img, 0, 0);
+		if (game->renderer.minimap.img)
+			mlx_put_image_to_window(game->renderer.mlx, game->renderer.win,
+				game->renderer.minimap.img, game->renderer.minimap.pos_x,
+				game->renderer.minimap.pos_y);
 	}
 }

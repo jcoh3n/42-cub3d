@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:24 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/25 00:44:59 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/29 15:48:46 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	flood_fill(char **map, int x, int y, t_dims dims)
 		&& flood_fill(map, x, y + 1, dims) && flood_fill(map, x, y - 1, dims));
 }
 
-char	**create_temp_map(t_map *map)
+char	**create_temp_map(t_map_data *map)
 {
 	char	**temp_map;
 	int		i;

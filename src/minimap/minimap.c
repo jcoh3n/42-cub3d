@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 15:00:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/28 17:04:35 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/29 15:45:23 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,14 @@ void	init_minimap(t_game *game)
 
 	if (!game)
 		error_exit(ERR_MALLOC);
-	minimap = &game->minimap;
+	minimap = &game->renderer.minimap;
 	ft_bzero(minimap, sizeof(t_minimap));
 	minimap->scale = MINIMAP_SCALE;
 	minimap->width = MINIMAP_RADIUS * 2;
 	minimap->height = MINIMAP_RADIUS * 2;
 	minimap->pos_x = MINIMAP_CENTER_X - MINIMAP_RADIUS;
 	minimap->pos_y = MINIMAP_CENTER_Y - MINIMAP_RADIUS;
-	minimap->img = mlx_new_image(game->mlx, minimap->width, minimap->height);
+	minimap->img = mlx_new_image(game->renderer.mlx, minimap->width, minimap->height);
 	if (!minimap->img)
 		error_exit(ERR_IMAGE_INIT);
 	minimap->addr = (int *)mlx_get_data_addr(minimap->img, &bits_per_pixel,
@@ -55,7 +55,7 @@ void	put_pixel_minimap(t_game *game, int x, int y, int color)
 	t_minimap	*minimap;
 	int			index;
 
-	minimap = &game->minimap;
+	minimap = &game->renderer.minimap;
 	if (x < 0 || x >= minimap->width || y < 0 || y >= minimap->height)
 		return ;
 	if (!is_in_circle(x, y, MINIMAP_RADIUS, MINIMAP_RADIUS))
@@ -74,7 +74,7 @@ void	draw_square(t_game *game, int map_x, int map_y, int color)
 	int	player_offset_x;
 	int	player_offset_y;
 
-	scale = game->minimap.scale;
+	scale = game->renderer.minimap.scale;
 	player_offset_x = (int)(game->player.x * scale) - MINIMAP_RADIUS;
 	player_offset_y = (int)(game->player.y * scale) - MINIMAP_RADIUS;
 	y = 0;
@@ -103,7 +103,7 @@ void	draw_player(t_game *game)
 	int		inside;
 	int		j;
 
-	size = game->minimap.scale * 1.5;
+	size = game->renderer.minimap.scale * 1.5;
 	if (size < 12)
 		size = 12;
 	angle = atan2(game->player.dir_y, game->player.dir_x);
@@ -163,9 +163,9 @@ void	clear_minimap(t_game *game)
 	int	x;
 	int	y;
 
-	for (y = 0; y < game->minimap.height; y++)
+	for (y = 0; y < game->renderer.minimap.height; y++)
 	{
-		for (x = 0; x < game->minimap.width; x++)
+		for (x = 0; x < game->renderer.minimap.width; x++)
 		{
 			if (is_in_circle(x, y, MINIMAP_RADIUS, MINIMAP_RADIUS))
 				put_pixel_minimap(game, x, y, MINIMAP_BACKGROUND);
@@ -176,7 +176,7 @@ void	clear_minimap(t_game *game)
 void	update_minimap(t_game *game)
 {
 	int x, y;
-	int view_range = (MINIMAP_RADIUS / game->minimap.scale) + 1;
+	int view_range = (MINIMAP_RADIUS / game->renderer.minimap.scale) + 1;
 	int map_x = (int)game->player.x;
 	int map_y = (int)game->player.y;
 

@@ -6,11 +6,11 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 17:55:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/28 12:02:05 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/29 15:45:23 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3d.h"
+#include "cub3d.h"
 
 #define MAX_RENDER_DISTANCE 10.0
 #define MIN_SHADE 0.3
@@ -116,7 +116,7 @@ void	render_wall_stripe(t_game *game, int x, t_ray *ray)
 	// Draw ceiling
 	ceiling_color = (game->map_data->ceiling.r << 16) | (game->map_data->ceiling.g << 8) | game->map_data->ceiling.b;
 	for (int y = 0; y < wall_top; y++)
-		put_pixel(&game->img, x, y, ceiling_color);
+		put_pixel(&game->renderer.frame, x, y, ceiling_color);
 	// Get appropriate texture
 	texture = get_wall_texture(game, ray);
 	// Calculate wall X coordinate (where exactly the ray hit the wall)
@@ -166,13 +166,13 @@ void	render_wall_stripe(t_game *game, int x, t_ray *ray)
 		g = ((color >> 8) & 0xFF) * shade;
 		b = (color & 0xFF) * shade;
 		color = (r << 16) | (g << 8) | b;
-		put_pixel(&game->img, x, y, color);
+		put_pixel(&game->renderer.frame, x, y, color);
 		tex_pos += step;
 	}
 	// Draw floor
 	floor_color = (game->map_data->floor.r << 16) | (game->map_data->floor.g << 8) | game->map_data->floor.b;
 	for (int y = wall_bottom; y < WINDOW_HEIGHT; y++)
-		put_pixel(&game->img, x, y, floor_color);
+		put_pixel(&game->renderer.frame, x, y, floor_color);
 }
 
 t_ray	cast_single_ray(t_game *game, double ray_angle)

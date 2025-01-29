@@ -6,15 +6,20 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 17:38:04 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/28 21:14:53 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/29 15:39:43 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# include "libft.h"
+# define _DEFAULT_SOURCE
+# define _POSIX_C_SOURCE 200809L
+
 # include <fcntl.h>
+# include <sys/types.h>
+# include <sys/stat.h>
+# include "libft.h"
 # include <math.h>
 # include <mlx.h>
 # include <stdbool.h>
@@ -25,7 +30,7 @@
 # include <unistd.h>
 
 /* Math Constants */
-# define M_PI 3.14159265358979323846
+#  define M_PI 3.14159265358979323846
 
 /* Minimap Settings */
 # define MINIMAP_SCALE 15
@@ -236,26 +241,75 @@ typedef struct s_ray
 	int			facing_right;
 }				t_ray;
 
-/* Game Structure */
-typedef struct s_game
+/* Rendering Related Structures */
+typedef struct s_renderer
 {
 	void		*mlx;
 	void		*win;
-	char		**map;
-	t_map		*map_data;
-	t_img		img;
-	t_player	player;
+	t_img		frame;          // Main frame buffer
 	t_minimap	minimap;
+	t_texture	*current_texture;  // Current texture being rendered
+	int			render_flags;   // Flags for rendering options
+}				t_renderer;
+
+/* Game State Management */
+typedef struct s_game_state
+{
 	int			is_running;
 	int			window_focused;
-	double		move_speed;
-	double		last_frame;
-	double		delta_time;
 	int			mouse_captured;
+	double		last_frame;     // Time of last frame
+	double		delta_time;     // Time since last frame
+	double		fps;           // Current FPS
+	int			status_anim_frame;    // Current animation frame
+	int			status_transitioning; // Whether status is animating
+}				t_game_state;
+
+/* Input Management */
+typedef struct s_input
+{
+	int			move_forward;
+	int			move_backward;
+	int			move_left;
+	int			move_right;
+	int			rotate_left;
+	int			rotate_right;
 	int			last_mouse_x;
 	int			last_mouse_y;
-	int status_anim_frame;    // Current animation frame
-	int status_transitioning; // Whether status is animating
+	double		mouse_sensitivity;
+}				t_input;
+
+/* Map Data Management */
+typedef struct s_map_data
+{
+	char		**grid;
+	int			width;
+	int			height;
+	char		**flood_grid;
+	t_color		floor;
+	t_color		ceiling;
+	t_texture	north;
+	t_texture	south;
+	t_texture	east;
+	t_texture	west;
+	char		player_start_dir;
+	double		player_start_x;
+	double		player_start_y;
+	char		player_dir;
+	double		player_x;
+	double		player_y;
+}				t_map_data;
+
+/* Main Game Structure */
+typedef struct s_game
+{
+	t_renderer	renderer;       // All rendering related data
+	t_game_state	state;         // Game state management
+	t_input		input;         // Input management
+	t_map_data	*map_data;     // Map data
+	t_player	player;        // Player data
+	char		**map;         // Quick access to current map grid
+	double		move_speed;    // Current movement speed
 }				t_game;
 
 typedef enum e_bool
@@ -266,18 +320,18 @@ typedef enum e_bool
 
 /* Main Functions */
 void			error_exit(char *message);
-void			free_map(t_map *map);
+void			free_map(t_map_data *map);
 void			cleanup_game(t_game *game);
 t_game			*init_game(void);
-t_map			*init_map(void);
+t_map_data		*init_map(void);
 
 /* Parsing Functions */
-void			parse_map(char *filename, t_map *map);
-void			validate_map(t_map *map);
-int				parse_textures(char *line, t_map *map);
-int				parse_colors(char *line, t_map *map);
-void			check_texture_files(t_map *map);
-void			store_map_line(t_map *map, char *line);
+void			parse_map(char *filename, t_map_data *map);
+void			validate_map(t_map_data *map);
+int				parse_textures(char *line, t_map_data *map);
+int				parse_colors(char *line, t_map_data *map);
+void			check_texture_files(t_map_data *map);
+void			store_map_line(t_map_data *map, char *line);
 
 /* Window Management Functions */
 int				init_window(t_game *game);
@@ -292,17 +346,14 @@ void			put_pixel(t_img *img, int x, int y, int color);
 void			clear_buffer(t_img *img);
 void			swap_buffers(t_game *game);
 
-/* Texture Functions */
-void			check_texture_files(t_map *map);
-
 /* Map Validation Functions */
-void			check_map_consistency(t_map *map);
+void			check_map_consistency(t_map_data *map);
 void			free_map_grid(char **grid);
 int				flood_fill(char **map, int x, int y, t_dims dims);
 int				is_map_char(char c);
 
 /* Map Storage Functions */
-char			**create_temp_map(t_map *map);
+char			**create_temp_map(t_map_data *map);
 void			free_temp_map(char **temp_map);
 
 /* Player Functions */
@@ -323,18 +374,6 @@ void			put_pixel_minimap(t_game *game, int x, int y, int color);
 /* Game Loop */
 int				game_loop(t_game *game);
 
-/* Function Declarations */
-void			error_exit(char *message);
-t_game			*init_game(void);
-void			init_minimap(t_game *game);
-void			init_player(t_game *game);
-int				init_window(t_game *game);
-void			parse_map(char *filename, t_map *map);
-void			setup_window_hooks(t_game *game);
-void			store_map_line(t_map *map, char *line);
-void			update_player_position(t_game *game);
-void			render_frame(t_game *game);
-
 /* Raycasting Functions */
 void			cast_rays(t_game *game);
 t_ray			cast_single_ray(t_game *game, double ray_angle);
@@ -343,5 +382,8 @@ void			render_wall_stripe(t_game *game, int x, t_ray *ray);
 /* Mouse Events */
 void			toggle_mouse_capture(t_game *game);
 int				handle_mouse_move(int x, int y, t_game *game);
+
+/* Rendering Functions */
+void			render_frame(t_game *game);
 
 #endif

@@ -6,13 +6,13 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:25 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/25 17:19:20 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/29 15:48:45 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static void	update_player_start_position(t_map *map, char *line, int len)
+static void	update_player_start_position(t_map_data *map, char *line, int len)
 {
 	int	i;
 
@@ -43,7 +43,7 @@ static char	*create_new_line(int width, char *line, int len)
 	return (new_line);
 }
 
-static char	**init_grid_rows(t_map *map)
+static char	**init_grid_rows(t_map_data *map)
 {
 	char	**new_grid;
 	int		i;
@@ -67,7 +67,7 @@ static char	**init_grid_rows(t_map *map)
 	return (new_grid);
 }
 
-static char	**create_new_grid(t_map *map, char *line, int len)
+static char	**create_new_grid(t_map_data *map, char *line, int len)
 {
 	char	**new_grid;
 	char	*new_line;
@@ -81,7 +81,7 @@ static char	**create_new_grid(t_map *map, char *line, int len)
 	return (new_grid);
 }
 
-static void	update_map_grid(t_map *map, char **new_grid)
+static void	update_map_grid(t_map_data *map, char **new_grid)
 {
 	int	i;
 
@@ -96,7 +96,7 @@ static void	update_map_grid(t_map *map, char **new_grid)
 	map->height++;
 }
 
-void	store_map_line(t_map *map, char *line)
+void	store_map_line(t_map_data *map, char *line)
 {
 	char	**new_grid;
 	int		len;

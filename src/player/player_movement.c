@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 16:10:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/29 15:13:35 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/29 15:32:47 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,26 +60,26 @@ static void	handle_movement(t_game *game, double dir_x, double dir_y)
 	int			collision;
 
 	player = &game->player;
-	new_x = player->x + dir_x * MOVE_SPEED;
-	new_y = player->y + dir_y * MOVE_SPEED;
+	new_x = player->x + dir_x * player->move_speed;
+	new_y = player->y + dir_y * player->move_speed;
 	collision = check_collision(game, new_x, new_y);
 	if (collision == 0)
 	{
 		player->x = new_x;
 		player->y = new_y;
+		player->pos_x = player->x;
+		player->pos_y = player->y;
 	}
 	else if (collision == 2)
+	{
 		player->x = new_x;
+		player->pos_x = player->x;
+	}
 	else if (collision == 3)
+	{
 		player->y = new_y;
-}
-
-static void	handle_rotation(t_game *game)
-{
-	if (game->player.rotate_left)
-		rotate_player(game, -ROT_SPEED);
-	if (game->player.rotate_right)
-		rotate_player(game, ROT_SPEED);
+		player->pos_y = player->y;
+	}
 }
 
 void	update_player_position(t_game *game)
@@ -87,13 +87,16 @@ void	update_player_position(t_game *game)
 	t_player	*player;
 
 	player = &game->player;
-	if (player->move_forward)
+	if (game->input.move_forward)
 		handle_movement(game, player->dir_x, player->dir_y);
-	if (player->move_backward)
+	if (game->input.move_backward)
 		handle_movement(game, -player->dir_x, -player->dir_y);
-	if (player->move_left)
+	if (game->input.move_left)
 		handle_movement(game, -player->plane_x, -player->plane_y);
-	if (player->move_right)
+	if (game->input.move_right)
 		handle_movement(game, player->plane_x, player->plane_y);
-	handle_rotation(game);
+	if (game->input.rotate_left)
+		rotate_player(game, -player->rot_speed);
+	if (game->input.rotate_right)
+		rotate_player(game, player->rot_speed);
 }

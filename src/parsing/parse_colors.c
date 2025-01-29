@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:27 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/28 21:58:02 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/29 15:48:44 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ static void	parse_rgb(char *str, t_color *color)
 	set_rgb_values(split, color);
 }
 
-int	parse_colors(char *line, t_map *map)
+int	parse_colors(char *line, t_map_data *map)
 {
 	char	*trim;
 

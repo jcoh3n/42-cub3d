@@ -6,13 +6,14 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 15:32:51 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/28 17:21:19 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/29 16:07:15 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 
 static int	ft_strendswith(const char *str, const char *suffix)
 {
@@ -50,11 +51,11 @@ static void	check_args(const char *filename, int argc, char **argv)
 	close(fd);
 }
 
-t_map	*init_map(void)
+t_map_data	*init_map(void)
 {
-	t_map	*map;
+	t_map_data	*map;
 
-	map = (t_map *)ft_calloc(1, sizeof(t_map));
+	map = (t_map_data *)ft_calloc(1, sizeof(t_map_data));
 	if (!map)
 		error_exit(ERR_MALLOC);
 	map->floor.r = -1;
@@ -73,19 +74,41 @@ t_game	*init_game(void)
 	game = (t_game *)ft_calloc(1, sizeof(t_game));
 	if (!game)
 		error_exit(ERR_MALLOC);
-	game->mlx = mlx_init();
-	if (!game->mlx)
+	// Initialize renderer
+	game->renderer.mlx = mlx_init();
+	if (!game->renderer.mlx)
 		error_exit(ERR_MALLOC);
+	game->renderer.render_flags = 0;
+	game->renderer.current_texture = NULL;
+	// Initialize game state
+	game->state.is_running = 1;
+	game->state.window_focused = 1;
+	game->state.mouse_captured = 0;
+	game->state.last_frame = get_time();
+	game->state.delta_time = 0;
+	game->state.fps = 0;
+	game->state.status_anim_frame = 0;
+	game->state.status_transitioning = 0;
+	// Initialize input
+	ft_memset(&game->input, 0, sizeof(t_input));
+	game->input.mouse_sensitivity = MOUSE_SENSITIVITY;
+	game->input.last_mouse_x = MOUSE_CENTER_X;
+	game->input.last_mouse_y = MOUSE_CENTER_Y;
+	// Initialize map data
 	game->map_data = init_map();
-	game->window_focused = 1;
+	if (!game->map_data)
+		error_exit(ERR_MALLOC);
+	// Initialize player with default values
+	game->player.move_speed = MOVE_SPEED;
+	game->player.rot_speed = ROT_SPEED;
 	return (game);
 }
 
 int	game_loop(t_game *game)
 {
-	if (!game->is_running)
+	if (!game->state.is_running)
 	{
-		mlx_loop_end(game->mlx);
+		mlx_loop_end(game->renderer.mlx);
 		return (1);
 	}
 	update_player_position(game);
@@ -101,15 +124,17 @@ int	main(int argc, char **argv)
 	game = init_game();
 	if (!game)
 		error_exit(ERR_MALLOC);
+	// Parse map and initialize game components
 	parse_map(argv[1], game->map_data);
 	if (!init_window(game))
 		error_exit(ERR_WINDOW_INIT);
 	game->map = game->map_data->grid;
+	init_player(game);
 	init_minimap(game);
-	setup_window_hooks(game);
-	game->is_running = 1;
-	mlx_loop_hook(game->mlx, game_loop, game);
-	mlx_loop(game->mlx);
+	// Start game loop
+	game->state.is_running = 1;
+	mlx_loop_hook(game->renderer.mlx, game_loop, game);
+	mlx_loop(game->renderer.mlx);
 	cleanup_game(game);
 	return (0);
 }

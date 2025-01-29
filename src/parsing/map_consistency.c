@@ -6,13 +6,13 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:22 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/28 21:57:22 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/29 15:48:44 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static int	is_valid_position(t_map *map, int i, int j)
+static int	is_valid_position(t_map_data *map, int i, int j)
 {
 	int	len_above;
 	int	len_below;
@@ -46,7 +46,7 @@ static int	is_valid_position(t_map *map, int i, int j)
 	return (1);
 }
 
-static void	check_map_edges(t_map *map)
+static void	check_map_edges(t_map_data *map)
 {
 	int	i;
 	int	j;
@@ -68,7 +68,7 @@ static void	check_map_edges(t_map *map)
 	}
 }
 
-static void	check_map_chars(t_map *map)
+static void	check_map_chars(t_map_data *map)
 {
 	int	i;
 	int	j;
@@ -85,7 +85,7 @@ static void	check_map_chars(t_map *map)
 	}
 }
 
-static void	check_player(t_map *map)
+static void	check_player(t_map_data *map)
 {
 	int	i;
 	int	j;
@@ -108,14 +108,14 @@ static void	check_player(t_map *map)
 		error_exit(ERR_PLAYER_MULTIPLE);
 }
 
-void	check_map_consistency(t_map *map)
+void	check_map_consistency(t_map_data *map)
 {
 	check_map_chars(map);
 	check_map_edges(map);
 	check_player(map);
 }
 
-int	check_line_consistency(t_map *map, int i, int len)
+int	check_line_consistency(t_map_data *map, int i, int len)
 {
 	int	j;
 

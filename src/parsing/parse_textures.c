@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:28 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/24 23:29:53 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/29 15:48:44 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static int	check_single_texture(char *texture_path)
 	return (1);
 }
 
-void	check_texture_files(t_map *map)
+void	check_texture_files(t_map_data *map)
 {
 	if (!check_single_texture(map->north.path)
 		|| !check_single_texture(map->south.path)
@@ -48,7 +48,7 @@ void	check_texture_files(t_map *map)
 		error_exit(ERR_TEXTURE_ACCESS);
 }
 
-static t_texture	*get_texture_direction(char *line, t_map *map)
+static t_texture	*get_texture_direction(char *line, t_map_data *map)
 {
 	if (!ft_strncmp(line, "NO", 2))
 		return (&map->north);
@@ -61,7 +61,7 @@ static t_texture	*get_texture_direction(char *line, t_map *map)
 	return (NULL);
 }
 
-int	parse_textures(char *line, t_map *map)
+int	parse_textures(char *line, t_map_data *map)
 {
 	char		*trim;
 	t_texture	*texture;
