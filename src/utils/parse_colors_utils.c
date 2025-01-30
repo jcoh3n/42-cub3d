@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_colors.c                                     :+:      :+:    :+:   */
+/*   parse_colors_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/20 15:25:27 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/30 17:25:52 by jcohen           ###   ########.fr       */
+/*   Created: 2025/01/30 17:19:37 by jcohen            #+#    #+#             */
+/*   Updated: 2025/01/30 17:29:08 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,37 @@ static void	set_rgb_value(t_color *color, char *value, int index)
 		color->b = num;
 }
 
-static void	parse_rgb_color(char *str, t_color *color)
+static int	is_valid_color_char(char c)
+{
+	return (c == ',' || ft_isdigit(c) || ft_isspace(c));
+}
+
+void	validate_color_format(char *str)
+{
+	int	i;
+	int	comma_count;
+
+	i = 0;
+	comma_count = 0;
+	while (str[i])
+	{
+		if (!is_valid_color_char(str[i]))
+			error_exit(ERR_COLOR_FORMAT);
+		if (str[i] == ',')
+			comma_count++;
+		i++;
+	}
+	if (comma_count != 2)
+		error_exit(ERR_COLOR_FORMAT);
+}
+
+void	parse_rgb_values(char *str, t_color *color)
 {
 	char	**split;
 	char	*trimmed;
 	int		i;
 
+	validate_color_format(str);
 	split = ft_split(str, ',');
 	if (!split)
 		error_exit(ERR_MALLOC);
@@ -67,31 +92,8 @@ static void	parse_rgb_color(char *str, t_color *color)
 			error_exit(ERR_COLOR_FORMAT);
 		set_rgb_value(color, trimmed, i);
 		free(trimmed);
-		free(split[i++]);
+		free(split[i]);
+		i++;
 	}
 	free(split);
-}
-
-int	parse_colors(char *line, t_map_data *map)
-{
-	char	*trim;
-
-	trim = ft_strtrim(line + 1, " \t");
-	if (!trim)
-		error_exit(ERR_MALLOC);
-	if (line[0] == 'F')
-	{
-		if (map->floor.r != -1)
-			error_exit(ERR_COLOR_DUP);
-		parse_rgb_color(trim, &map->floor);
-	}
-	else if (line[0] == 'C')
-	{
-		if (map->ceiling.r != -1)
-			error_exit(ERR_COLOR_DUP);
-		parse_rgb_color(trim, &map->ceiling);
-	}
-	else
-		return (free(trim), 0);
-	return (free(trim), 1);
 }

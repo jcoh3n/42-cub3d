@@ -6,13 +6,13 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:24 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/29 15:48:46 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/30 17:28:18 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static int	is_valid_position(int x, int y, t_dims dims)
+static int	is_within_bounds(int x, int y, t_dims dims)
 {
 	return (x >= 0 && x < dims.width && y >= 0 && y < dims.height);
 }
@@ -29,7 +29,7 @@ static int	is_outside_map(char c)
 
 int	flood_fill(char **map, int x, int y, t_dims dims)
 {
-	if (!is_valid_position(x, y, dims))
+	if (!is_within_bounds(x, y, dims))
 		return (0);
 	if (is_outside_map(map[y][x]))
 		return (1);

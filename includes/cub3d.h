@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 17:38:04 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/30 16:37:21 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/30 17:29:08 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -334,6 +334,18 @@ int					parse_colors(char *line, t_map_data *map);
 void				check_texture_files(t_map_data *map);
 void				store_map_line(t_map_data *map, char *line);
 
+/* map_consistency_utils.c */
+void				check_map_chars(t_map_data *map);
+void				check_player(t_map_data *map);
+int					check_line_consistency(t_map_data *map, int i, int len);
+int					is_valid_position(t_map_data *map, int i, int j);
+
+/* parse_colors_utils.c */
+void				parse_rgb_values(char *str, t_color *color);
+
+/* map_store_utils.c */
+void				update_map_grid(t_map_data *map, char *new_line);
+
 /* Window Management Functions */
 int					init_window(t_game *game);
 int					init_textures(t_game *game);
@@ -395,5 +407,8 @@ int					get_minimap_center_x(void);
 int					get_minimap_center_y(void);
 int					get_mouse_center_x(void);
 int					get_mouse_center_y(void);
+
+/* Color Parsing Utils */
+void				validate_color_format(char *str);
 
 #endif

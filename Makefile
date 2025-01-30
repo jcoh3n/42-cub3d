@@ -24,6 +24,9 @@ SRCS = src/main.c \
        src/player/player_init.c \
        src/player/player_movement.c \
        src/utils/utils.c \
+	   src/utils/map_consistency_utils.c \
+	   src/utils/map_store_utils.c \
+	   src/utils/parse_colors_utils.c \
        src/minimap/minimap.c \
        src/window/render.c \
        src/raycasting/raycasting.c \

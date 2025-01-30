@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:52 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/30 01:17:15 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/30 17:13:22 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static void	check_config_complete(t_map_data *map)
 static void	handle_line(char *line, t_map_data *map)
 {
 	static t_parse_state	state = PARSE_CONFIG;
-	static int			found_map = 0;
+	static int				found_map = 0;
 
 	if (state == PARSE_CONFIG)
 	{
