@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:24 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/30 17:28:18 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/30 17:44:51 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,15 @@ static int	is_outside_map(char c)
 
 int	flood_fill(char **map, int x, int y, t_dims dims)
 {
-	if (!is_within_bounds(x, y, dims))
-		return (0);
+	if (!is_within_bounds(x, y, dims) || is_wall_or_visited(map[y][x]))
+		return (1);
 	if (is_outside_map(map[y][x]))
 		return (1);
-	if (is_wall_or_visited(map[y][x]))
-		return (1);
 	map[y][x] = 'F';
-	return (flood_fill(map, x + 1, y, dims) && flood_fill(map, x - 1, y, dims)
-		&& flood_fill(map, x, y + 1, dims) && flood_fill(map, x, y - 1, dims));
+	if (!flood_fill(map, x + 1, y, dims) || !flood_fill(map, x - 1, y, dims)
+		|| !flood_fill(map, x, y + 1, dims) || !flood_fill(map, x, y - 1, dims))
+		return (0);
+	return (1);
 }
 
 char	**create_temp_map(t_map_data *map)
@@ -63,14 +63,4 @@ char	**create_temp_map(t_map_data *map)
 	}
 	temp_map[i] = NULL;
 	return (temp_map);
-}
-
-void	free_temp_map(char **temp_map)
-{
-	int	i;
-
-	i = 0;
-	while (temp_map[i])
-		free(temp_map[i++]);
-	free(temp_map);
 }

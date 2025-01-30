@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 15:00:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/30 14:31:55 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/30 17:09:51 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,13 +176,15 @@ void	clear_minimap(t_game *game)
 
 void	update_minimap(t_game *game)
 {
+	int	view_range;
+	int	map_x;
+	int	map_y;
+
 	int x, y;
-	int view_range = (MINIMAP_RADIUS / game->renderer.minimap.scale) + 1;
-	int map_x = (int)game->player.x;
-	int map_y = (int)game->player.y;
-
+	view_range = (MINIMAP_RADIUS / game->renderer.minimap.scale) + 1;
+	map_x = (int)game->player.x;
+	map_y = (int)game->player.y;
 	clear_minimap(game);
-
 	for (y = map_y - view_range; y <= map_y + view_range; y++)
 	{
 		for (x = map_x - view_range; x <= map_x + view_range; x++)

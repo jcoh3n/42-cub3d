@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 16:17:19 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/30 16:17:24 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/30 17:42:18 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,14 @@ void	cleanup_textures(t_game *game)
 		game->map_data->east.img = NULL;
 		game->map_data->east.addr = NULL;
 	}
+}
+
+void	free_temp_map(char **temp_map)
+{
+	int	i;
+
+	i = 0;
+	while (temp_map[i])
+		free(temp_map[i++]);
+	free(temp_map);
 }

@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 17:19:39 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/30 17:26:53 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/30 17:44:54 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	check_map_chars(t_map_data *map)
 		j = 0;
 		while (map->grid[i][j])
 		{
-			if (!is_map_char(map->grid[i][j]))
+			if (!ft_strchr(VALID_MAP_CHARS, map->grid[i][j]))
 				error_exit(ERR_MAP_CHARS);
 			j++;
 		}

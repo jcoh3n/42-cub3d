@@ -8,6 +8,7 @@ LDLIBS = -lft -lmlx -lXext -lX11 -lm
 # Source files
 SRCS = src/main.c \
 	   src/clean/ft_cleanup.c \
+	   src/clean/ft_cleanup2.c \
        src/parsing/parsing.c \
        src/parsing/parse_textures.c \
        src/parsing/parse_colors.c \

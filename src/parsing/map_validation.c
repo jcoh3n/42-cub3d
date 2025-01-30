@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:26 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/29 15:48:46 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/30 17:44:50 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,9 @@ void	validate_map(t_map_data *map)
 	dims.height = map->height;
 	if (!flood_fill(map->flood_grid, (int)map->player_x, (int)map->player_y,
 			dims))
+	{
+		free_temp_map(map->flood_grid);
 		error_exit(ERR_MAP_WALLS);
+	}
 	check_map_consistency(map);
 }

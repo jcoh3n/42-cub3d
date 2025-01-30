@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 17:38:04 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/30 17:29:08 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/30 17:37:11 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -364,7 +364,6 @@ void				swap_buffers(t_game *game);
 void				check_map_consistency(t_map_data *map);
 void				free_map_grid(char **grid);
 int					flood_fill(char **map, int x, int y, t_dims dims);
-int					is_map_char(char c);
 
 /* Map Storage Functions */
 char				**create_temp_map(t_map_data *map);
