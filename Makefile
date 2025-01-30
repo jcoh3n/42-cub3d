@@ -19,6 +19,7 @@ SRCS = src/main.c \
        src/window/window_events.c \
        src/window/mouse_events.c \
        src/window/buffer_management.c \
+       src/window/window_utils.c \
        src/player/player_init.c \
        src/player/player_movement.c \
        src/utils/time_utils.c \

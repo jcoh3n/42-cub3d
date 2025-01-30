@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 15:32:51 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/29 16:07:14 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/30 14:33:23 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,8 +161,10 @@ int	init_window(t_game *game)
 	game->state.is_running = 1;
 	game->state.window_focused = 1;
 	game->state.mouse_captured = 0;
-	game->input.last_mouse_x = MOUSE_CENTER_X;
-	game->input.last_mouse_y = MOUSE_CENTER_Y;
+	game->input.mouse_sensitivity = MOUSE_SENSITIVITY;
+	// Initialize mouse position after window is created
+	game->input.last_mouse_x = get_mouse_center_x();
+	game->input.last_mouse_y = get_mouse_center_y();
 	// Set up event handlers
 	setup_window_hooks(game);
 	// Initialize timing

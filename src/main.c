@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 15:32:51 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/29 16:07:15 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/30 14:33:23 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,6 @@ t_game	*init_game(void)
 	// Initialize input
 	ft_memset(&game->input, 0, sizeof(t_input));
 	game->input.mouse_sensitivity = MOUSE_SENSITIVITY;
-	game->input.last_mouse_x = MOUSE_CENTER_X;
-	game->input.last_mouse_y = MOUSE_CENTER_Y;
 	// Initialize map data
 	game->map_data = init_map();
 	if (!game->map_data)

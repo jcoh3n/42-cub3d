@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 15:00:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/29 15:45:23 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/30 14:31:55 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,13 @@ void	init_minimap(t_game *game)
 		error_exit(ERR_MALLOC);
 	minimap = &game->renderer.minimap;
 	ft_bzero(minimap, sizeof(t_minimap));
-	minimap->scale = MINIMAP_SCALE;
 	minimap->width = MINIMAP_RADIUS * 2;
 	minimap->height = MINIMAP_RADIUS * 2;
-	minimap->pos_x = MINIMAP_CENTER_X - MINIMAP_RADIUS;
-	minimap->pos_y = MINIMAP_CENTER_Y - MINIMAP_RADIUS;
-	minimap->img = mlx_new_image(game->renderer.mlx, minimap->width, minimap->height);
+	minimap->scale = MINIMAP_SCALE;
+	minimap->pos_x = get_minimap_center_x() - MINIMAP_RADIUS;
+	minimap->pos_y = get_minimap_center_y() - MINIMAP_RADIUS;
+	minimap->img = mlx_new_image(game->renderer.mlx, minimap->width,
+			minimap->height);
 	if (!minimap->img)
 		error_exit(ERR_IMAGE_INIT);
 	minimap->addr = (int *)mlx_get_data_addr(minimap->img, &bits_per_pixel,
