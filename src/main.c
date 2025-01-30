@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 15:32:51 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/30 14:39:21 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/30 19:04:51 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,6 @@ t_game	*init_game(void)
 	game->map_data = init_map();
 	if (!game->map_data)
 		error_exit(ERR_MALLOC);
-	game->player.move_speed = MOVE_SPEED;
-	game->player.rot_speed = ROT_SPEED;
 	return (game);
 }
 
