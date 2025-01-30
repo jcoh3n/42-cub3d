@@ -6,11 +6,18 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 16:10:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/29 15:32:47 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/30 16:09:18 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+static int	check_corner_collision(t_game *game, double x, double y)
+{
+	if (game->map_data->grid[(int)y][(int)x] == '1')
+		return (1);
+	return (0);
+}
 
 static int	check_collision(t_game *game, double new_x, double new_y)
 {
@@ -18,20 +25,18 @@ static int	check_collision(t_game *game, double new_x, double new_y)
 	int		map_x;
 	int		map_y;
 
-	padding = 0.1;
+	padding = 0.2;
 	if (new_x - padding < 0 || new_x + padding >= game->map_data->width || new_y
 		- padding < 0 || new_y + padding >= game->map_data->height)
 		return (1);
 	map_x = (int)new_x;
 	map_y = (int)new_y;
 	if (game->map_data->grid[map_y][map_x] == '1')
-	{
-		if (game->map_data->grid[(int)game->player.y][map_x] != '1')
-			return (2);
-		if (game->map_data->grid[map_y][(int)game->player.x] != '1')
-			return (3);
 		return (1);
-	}
+	if (check_corner_collision(game, new_x + padding, new_y + padding)
+		|| check_corner_collision(game, new_x - padding, new_y - padding)
+		|| check_corner_collision(game, new_x - padding, new_y + padding))
+		return (1);
 	return (0);
 }
 
@@ -57,27 +62,15 @@ static void	handle_movement(t_game *game, double dir_x, double dir_y)
 	t_player	*player;
 	double		new_x;
 	double		new_y;
-	int			collision;
 
 	player = &game->player;
 	new_x = player->x + dir_x * player->move_speed;
 	new_y = player->y + dir_y * player->move_speed;
-	collision = check_collision(game, new_x, new_y);
-	if (collision == 0)
+	if (!check_collision(game, new_x, new_y))
 	{
 		player->x = new_x;
 		player->y = new_y;
 		player->pos_x = player->x;
-		player->pos_y = player->y;
-	}
-	else if (collision == 2)
-	{
-		player->x = new_x;
-		player->pos_x = player->x;
-	}
-	else if (collision == 3)
-	{
-		player->y = new_y;
 		player->pos_y = player->y;
 	}
 }
