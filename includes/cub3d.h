@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 17:38:04 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/30 14:47:08 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/30 16:16:40 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@
 # define WINDOW_WIDTH 1280
 # define WINDOW_HEIGHT 720
 # define EXTENSION_NAME ".cub"
+# define WINDOW_NAME "cub3D"
 
 /* Status Indicator Settings */
 # define STATUS_HEIGHT 25
@@ -80,6 +81,9 @@
 # define FOV 1.0472
 # define FOV_BIGGER 1.5708
 # define WALL_STRIP_WIDTH 1
+
+# define DIRECTION_VECTOR 1.0
+# define PLANE_VECTOR 0.66
 
 /* Error Messages - File */
 # define ERR_USAGE "Usage: ./cub3D <map.cub>"
@@ -354,6 +358,8 @@ char				**create_temp_map(t_map_data *map);
 void				free_temp_map(char **temp_map);
 
 /* Player Functions */
+void				init_player_direction(t_player *player, char dir);
+void				init_player_position(t_player *player, double x, double y);
 void				init_player(t_game *game);
 void				update_player_position(t_game *game);
 void				rotate_player(t_game *game, double angle);
