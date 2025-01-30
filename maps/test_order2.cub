@@ -1,0 +1,19 @@
+NO  ./textures/glowing_square.xpm
+
+F 220,100,0
+
+EA ./textures/rocky_road.xpm
+C 225,30,0
+
+WE ./textures/rocky_road.xpm
+
+SO ./textures/vinelike.xpm
+
+
+
+1111111111111
+1000000000001
+1000000000001
+1000000N00001
+1000000000001
+1111111111111
