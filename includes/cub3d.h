@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 17:38:04 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/30 14:35:29 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/30 14:47:08 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -318,6 +318,7 @@ typedef enum e_bool
 void				error_exit(char *message);
 void				free_map(t_map_data *map);
 void				cleanup_game(t_game *game);
+void				clean_map_data(t_map_data *map, void *mlx);
 t_game				*init_game(void);
 t_map_data			*init_map(void);
 

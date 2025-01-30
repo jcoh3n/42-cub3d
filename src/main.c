@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 15:32:51 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/30 14:33:23 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/30 14:39:21 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,13 +74,11 @@ t_game	*init_game(void)
 	game = (t_game *)ft_calloc(1, sizeof(t_game));
 	if (!game)
 		error_exit(ERR_MALLOC);
-	// Initialize renderer
 	game->renderer.mlx = mlx_init();
 	if (!game->renderer.mlx)
 		error_exit(ERR_MALLOC);
 	game->renderer.render_flags = 0;
 	game->renderer.current_texture = NULL;
-	// Initialize game state
 	game->state.is_running = 1;
 	game->state.window_focused = 1;
 	game->state.mouse_captured = 0;
@@ -89,29 +87,14 @@ t_game	*init_game(void)
 	game->state.fps = 0;
 	game->state.status_anim_frame = 0;
 	game->state.status_transitioning = 0;
-	// Initialize input
 	ft_memset(&game->input, 0, sizeof(t_input));
 	game->input.mouse_sensitivity = MOUSE_SENSITIVITY;
-	// Initialize map data
 	game->map_data = init_map();
 	if (!game->map_data)
 		error_exit(ERR_MALLOC);
-	// Initialize player with default values
 	game->player.move_speed = MOVE_SPEED;
 	game->player.rot_speed = ROT_SPEED;
 	return (game);
-}
-
-int	game_loop(t_game *game)
-{
-	if (!game->state.is_running)
-	{
-		mlx_loop_end(game->renderer.mlx);
-		return (1);
-	}
-	update_player_position(game);
-	render_frame(game);
-	return (0);
 }
 
 int	main(int argc, char **argv)
@@ -122,14 +105,12 @@ int	main(int argc, char **argv)
 	game = init_game();
 	if (!game)
 		error_exit(ERR_MALLOC);
-	// Parse map and initialize game components
 	parse_map(argv[1], game->map_data);
 	if (!init_window(game))
 		error_exit(ERR_WINDOW_INIT);
 	game->map = game->map_data->grid;
 	init_player(game);
 	init_minimap(game);
-	// Start game loop
 	game->state.is_running = 1;
 	mlx_loop_hook(game->renderer.mlx, game_loop, game);
 	mlx_loop(game->renderer.mlx);

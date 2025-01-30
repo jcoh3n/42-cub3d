@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 16:35:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/28 12:24:51 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/30 14:38:55 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,4 +26,16 @@ void	error_exit(char *message)
 	ft_putstr_fd(message, 2);
 	ft_putstr_fd("\n", 2);
 	exit(1);
+}
+
+int	game_loop(t_game *game)
+{
+	if (!game->state.is_running)
+	{
+		mlx_loop_end(game->renderer.mlx);
+		return (1);
+	}
+	update_player_position(game);
+	render_frame(game);
+	return (0);
 }

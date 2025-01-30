@@ -22,7 +22,7 @@ SRCS = src/main.c \
        src/window/window_utils.c \
        src/player/player_init.c \
        src/player/player_movement.c \
-       src/utils/time_utils.c \
+       src/utils/utils.c \
        src/minimap/minimap.c \
        src/window/render.c \
        src/raycasting/raycasting.c \
