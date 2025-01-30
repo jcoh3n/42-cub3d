@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 17:38:04 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/30 17:37:11 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/30 17:59:03 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -312,6 +312,31 @@ typedef struct s_game
 	double			move_speed;
 }					t_game;
 
+typedef struct s_square_data
+{
+	int				scale;
+	int				offset_x;
+	int				offset_y;
+	int				map_x;
+	int				map_y;
+	int				color;
+}					t_square_data;
+
+typedef struct s_point
+{
+	int				x;
+	int				y;
+}					t_point;
+
+typedef struct s_draw_player_data
+{
+	int				size;
+	double			angle;
+	int				arrow_x[3];
+	int				arrow_y[3];
+	t_player		*player;
+}					t_draw_player_data;
+
 typedef enum e_bool
 {
 	FALSE = 0,
@@ -385,6 +410,9 @@ void				draw_border(t_game *game);
 void				draw_player(t_game *game);
 void				draw_square(t_game *game, int map_x, int map_y, int color);
 void				put_pixel_minimap(t_game *game, int x, int y, int color);
+void				draw_player_triangle(t_game *game,
+						t_draw_player_data *data);
+int					is_in_circle(int x, int y, int cx, int cy);
 
 /* Game Loop */
 int					game_loop(t_game *game);

@@ -29,6 +29,9 @@ SRCS = src/main.c \
 	   src/utils/map_store_utils.c \
 	   src/utils/parse_colors_utils.c \
        src/minimap/minimap.c \
+       src/minimap/minimap_drw_utils.c \
+       src/minimap/minimap_draw.c \
+       src/minimap/minimap_init.c \
        src/window/render.c \
        src/raycasting/raycasting.c \
 
