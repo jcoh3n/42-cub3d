@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 15:32:51 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/29 15:45:23 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/30 16:38:08 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,5 +30,6 @@ void	clear_buffer(t_img *img)
 void	swap_buffers(t_game *game)
 {
 	if (game->state.window_focused)
-		mlx_put_image_to_window(game->renderer.mlx, game->renderer.win, game->renderer.frame.img, 0, 0);
+		mlx_put_image_to_window(game->renderer.mlx, game->renderer.win,
+			game->renderer.frame.img, 0, 0);
 }

@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 17:38:04 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/30 16:16:40 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/30 16:37:21 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -336,6 +336,7 @@ void				store_map_line(t_map_data *map, char *line);
 
 /* Window Management Functions */
 int					init_window(t_game *game);
+int					init_textures(t_game *game);
 void				setup_window_hooks(t_game *game);
 int					handle_window_close(t_game *game);
 int					handle_window_focus(int focused, t_game *game);
