@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:52 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/29 15:48:44 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/01/30 01:17:15 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,23 +52,35 @@ static void	check_config_complete(t_map_data *map)
 static void	handle_line(char *line, t_map_data *map)
 {
 	static t_parse_state	state = PARSE_CONFIG;
+	static int			found_map = 0;
 
 	if (state == PARSE_CONFIG)
 	{
+		if (!line[0])
+			return ;
 		if (!handle_config_line(line, map))
 		{
 			state = PARSE_MAP;
 			check_config_complete(map);
+			found_map = 1;
 			store_map_line(map, line);
 			return ;
 		}
 		return ;
 	}
-	if (!line[0] || line[0] == '\n')
-		error_exit(ERR_MAP_EMPTY_LINE);
-	if (!is_map_char(line[0]))
-		error_exit(ERR_MAP_CHARS);
-	store_map_line(map, line);
+	if (state == PARSE_MAP)
+	{
+		if (!line[0] || line[0] == '\n')
+		{
+			if (found_map)
+				error_exit(ERR_MAP_EMPTY_LINE);
+			return ;
+		}
+		if (!is_map_char(line[0]))
+			error_exit(ERR_MAP_CHARS);
+		found_map = 1;
+		store_map_line(map, line);
+	}
 }
 
 void	parse_map(char *filename, t_map_data *map)
