@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 17:55:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/02/04 19:09:06 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/02/04 19:24:28 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,161 +67,210 @@ unsigned int	get_texture_color(t_texture *texture, int tex_x, int tex_y)
 		return (*(unsigned int *)pixel_addr);
 }
 
-void	render_wall_stripe(t_game *game, int x, t_ray *ray)
+void	init_wall_dimensions(t_wall_render *wall, double perp_distance)
 {
-	double			player_angle;
-	double			perp_distance;
-	int				wall_height;
-	int				wall_top;
-	int				wall_bottom;
-	int				ceiling_color;
-	t_texture		*texture;
-	double			wall_x;
-	int				tex_x;
-	double			step;
-	double			tex_pos;
-	double			shade;
-	int				tex_y;
-	char			*pixel_addr;
-	unsigned int	color;
-	unsigned char	r;
-	unsigned char	g;
-	unsigned char	b;
-	int				floor_color;
-	int				y;
+	wall->wall_height = (int)((double)WINDOW_HEIGHT / perp_distance);
+	wall->wall_top = -wall->wall_height / 2 + WINDOW_HEIGHT / 2;
+	wall->wall_bottom = wall->wall_height / 2 + WINDOW_HEIGHT / 2;
+	if (wall->wall_top < 0)
+		wall->wall_top = 0;
+	if (wall->wall_bottom >= WINDOW_HEIGHT)
+		wall->wall_bottom = WINDOW_HEIGHT - 1;
+}
 
-	player_angle = atan2(game->player.dir_y, game->player.dir_x);
-	perp_distance = ray->distance * cos(ray->ray_angle - player_angle);
-	wall_height = (int)(WINDOW_HEIGHT / perp_distance);
-	wall_top = (WINDOW_HEIGHT - wall_height) / 2;
-	wall_bottom = (WINDOW_HEIGHT + wall_height) / 2;
-	if (wall_top < 0)
-		wall_top = 0;
-	if (wall_bottom >= WINDOW_HEIGHT)
-		wall_bottom = WINDOW_HEIGHT - 1;
-	ceiling_color = (game->map_data->ceiling.r << 16) | (game->map_data->ceiling.g << 8) | game->map_data->ceiling.b;
+void	draw_ceiling(t_game *game, int x, t_wall_render *wall,
+		t_color_data *colors)
+{
+	int	y;
+
+	colors->ceiling_color = (game->map_data->ceiling.r << 16) | (game->map_data->ceiling.g << 8) | game->map_data->ceiling.b;
 	y = 0;
-	while (y < wall_top)
+	while (y < wall->wall_top)
 	{
-		put_pixel(&game->renderer.frame, x, y, ceiling_color);
+		put_pixel(&game->renderer.frame, x, y, colors->ceiling_color);
 		y++;
 	}
-	texture = get_wall_texture(game, ray);
+}
+
+void	init_wall_texture(t_wall_render *wall, t_ray *ray, t_texture *texture,
+		double perp_distance, t_game *game)
+{
+	double	wall_x;
+
 	if (ray->is_vertical)
 		wall_x = game->player.y + ray->distance * sin(ray->ray_angle);
 	else
 		wall_x = game->player.x + ray->distance * cos(ray->ray_angle);
 	wall_x -= floor(wall_x);
-	tex_x = (int)(wall_x * texture->width);
+	wall->tex_x = (int)(wall_x * texture->width);
 	if ((ray->is_vertical && !ray->facing_right) || (!ray->is_vertical
 			&& ray->facing_up))
-		tex_x = texture->width - tex_x - 1;
-	if (tex_x < 0)
-		tex_x = 0;
-	if (tex_x >= texture->width)
-		tex_x = texture->width - 1;
-	step = (double)texture->height / wall_height;
-	tex_pos = (wall_top - WINDOW_HEIGHT / 2 + wall_height / 2) * step;
-	shade = 1.0;
+		wall->tex_x = texture->width - wall->tex_x - 1;
+	if (wall->tex_x < 0)
+		wall->tex_x = 0;
+	if (wall->tex_x >= texture->width)
+		wall->tex_x = texture->width - 1;
+	wall->step = (double)texture->height / wall->wall_height;
+	wall->tex_pos = (wall->wall_top - WINDOW_HEIGHT / 2 + wall->wall_height / 2)
+		* wall->step;
+	wall->shade = 1.0;
 	if (perp_distance > 1.0)
 	{
-		shade = 1.0 - (perp_distance / MAX_RENDER_DISTANCE) * SHADE_STEP;
-		if (shade < MIN_SHADE)
-			shade = MIN_SHADE;
+		wall->shade = 1.0 - (perp_distance / MAX_RENDER_DISTANCE) * SHADE_STEP;
+		if (wall->shade < MIN_SHADE)
+			wall->shade = MIN_SHADE;
 	}
-	y = wall_top;
-	while (y < wall_bottom)
+}
+
+void	draw_textured_wall(t_game *game, int x, t_wall_render *wall,
+		t_texture *texture, t_color_data *colors)
+{
+	int		y;
+	char	*pixel_addr;
+
+	y = wall->wall_top;
+	while (y < wall->wall_bottom)
 	{
-		tex_y = (int)tex_pos & (texture->height - 1);
-		pixel_addr = texture->addr + (tex_y * texture->line_length + tex_x
-				* (texture->bits_per_pixel / 8));
+		wall->tex_y = (int)wall->tex_pos & (texture->height - 1);
+		pixel_addr = texture->addr + (wall->tex_y * texture->line_length
+				+ wall->tex_x * (texture->bits_per_pixel / 8));
 		if (texture->endian == 1)
-			color = ((unsigned char)pixel_addr[0] << 24 | (unsigned char)pixel_addr[1] << 16 | (unsigned char)pixel_addr[2] << 8 | (unsigned char)pixel_addr[3]);
+			colors->color = ((unsigned char)pixel_addr[0] << 24 | (unsigned char)pixel_addr[1] << 16 | (unsigned char)pixel_addr[2] << 8 | (unsigned char)pixel_addr[3]);
 		else
-			color = *(unsigned int *)pixel_addr;
-		r = ((color >> 16) & 0xFF) * shade;
-		g = ((color >> 8) & 0xFF) * shade;
-		b = (color & 0xFF) * shade;
-		color = (r << 16) | (g << 8) | b;
-		put_pixel(&game->renderer.frame, x, y, color);
-		tex_pos += step;
+			colors->color = *(unsigned int *)pixel_addr;
+		colors->r = ((colors->color >> 16) & 0xFF) * wall->shade;
+		colors->g = ((colors->color >> 8) & 0xFF) * wall->shade;
+		colors->b = (colors->color & 0xFF) * wall->shade;
+		colors->color = (colors->r << 16) | (colors->g << 8) | colors->b;
+		put_pixel(&game->renderer.frame, x, y, colors->color);
+		wall->tex_pos += wall->step;
 		y++;
 	}
-	floor_color = (game->map_data->floor.r << 16) | (game->map_data->floor.g << 8) | game->map_data->floor.b;
-	y = wall_bottom;
+}
+
+void	draw_floor(t_game *game, int x, t_wall_render *wall,
+		t_color_data *colors)
+{
+	int	y;
+
+	colors->floor_color = (game->map_data->floor.r << 16) | (game->map_data->floor.g << 8) | game->map_data->floor.b;
+	y = wall->wall_bottom;
 	while (y < WINDOW_HEIGHT)
 	{
-		put_pixel(&game->renderer.frame, x, y, floor_color);
+		put_pixel(&game->renderer.frame, x, y, colors->floor_color);
 		y++;
+	}
+}
+
+void	render_wall_stripe(t_game *game, int x, t_ray *ray)
+{
+	double			player_angle;
+	double			perp_distance;
+	t_texture		*texture;
+	t_wall_render	wall;
+	t_color_data	colors;
+
+	player_angle = atan2(game->player.dir_y, game->player.dir_x);
+	perp_distance = ray->distance * cos(ray->ray_angle - player_angle);
+	init_wall_dimensions(&wall, perp_distance);
+	draw_ceiling(game, x, &wall, &colors);
+	texture = get_wall_texture(game, ray);
+	init_wall_texture(&wall, ray, texture, perp_distance, game);
+	draw_textured_wall(game, x, &wall, texture, &colors);
+	draw_floor(game, x, &wall, &colors);
+}
+
+void	init_ray_and_dda(t_ray *ray, t_dda_data *dda, double ray_angle,
+		t_game *game)
+{
+	ray->ray_angle = ray_angle;
+	ray->facing_up = (sin(ray_angle) < 0);
+	ray->facing_right = (cos(ray_angle) > 0);
+	dda->ray_dir_x = cos(ray_angle);
+	dda->ray_dir_y = sin(ray_angle);
+	dda->delta_dist_x = fabs(1.0 / dda->ray_dir_x);
+	dda->delta_dist_y = fabs(1.0 / dda->ray_dir_y);
+	dda->map_x = (int)game->player.x;
+	dda->map_y = (int)game->player.y;
+}
+
+void	calculate_step_and_side_dist(t_dda_data *dda, t_game *game)
+{
+	if (dda->ray_dir_x < 0)
+		dda->step_x = -1;
+	else
+		dda->step_x = 1;
+	if (dda->ray_dir_y < 0)
+		dda->step_y = -1;
+	else
+		dda->step_y = 1;
+	if (dda->ray_dir_x < 0)
+		dda->side_dist_x = (game->player.x - dda->map_x) * dda->delta_dist_x;
+	else
+		dda->side_dist_x = (dda->map_x + 1.0 - game->player.x)
+			* dda->delta_dist_x;
+	if (dda->ray_dir_y < 0)
+		dda->side_dist_y = (game->player.y - dda->map_y) * dda->delta_dist_y;
+	else
+		dda->side_dist_y = (dda->map_y + 1.0 - game->player.y)
+			* dda->delta_dist_y;
+}
+
+int	check_wall_hit(t_dda_data *dda, t_game *game)
+{
+	return (dda->map_x >= 0 && dda->map_x < game->map_data->width
+		&& dda->map_y >= 0 && dda->map_y < game->map_data->height
+		&& game->map_data->grid[dda->map_y][dda->map_x] == '1');
+}
+
+void	perform_dda(t_ray *ray, t_dda_data *dda, t_game *game)
+{
+	while (1)
+	{
+		if (dda->side_dist_x < dda->side_dist_y)
+		{
+			dda->side_dist_x += dda->delta_dist_x;
+			dda->map_x += dda->step_x;
+			ray->is_vertical = 1;
+		}
+		else
+		{
+			dda->side_dist_y += dda->delta_dist_y;
+			dda->map_y += dda->step_y;
+			ray->is_vertical = 0;
+		}
+		if (check_wall_hit(dda, game))
+		{
+			ray->wall_hit_x = dda->map_x;
+			ray->wall_hit_y = dda->map_y;
+			break ;
+		}
+	}
+}
+
+void	calculate_ray_distance(t_ray *ray, t_dda_data *dda, t_game *game)
+{
+	if (ray->is_vertical)
+	{
+		ray->distance = fabs((dda->map_x - game->player.x + (1 - dda->step_x)
+					/ 2) / dda->ray_dir_x);
+	}
+	else
+	{
+		ray->distance = fabs((dda->map_y - game->player.y + (1 - dda->step_y)
+					/ 2) / dda->ray_dir_y);
 	}
 }
 
 t_ray	cast_single_ray(t_game *game, double ray_angle)
 {
-	t_ray	ray;
-	double	ray_dir_x;
-	double	ray_dir_y;
-	double	delta_dist_x;
-	double	delta_dist_y;
-	int		map_x;
-	int		map_y;
-	double	side_dist_x;
-	double	side_dist_y;
-	int		step_x;
-	int		step_y;
+	t_ray		ray;
+	t_dda_data	dda;
 
-	ray.ray_angle = ray_angle;
-	ray.facing_up = (sin(ray_angle) < 0);
-	ray.facing_right = (cos(ray_angle) > 0);
-	ray_dir_x = cos(ray_angle);
-	ray_dir_y = sin(ray_angle);
-	delta_dist_x = fabs(1.0 / ray_dir_x);
-	delta_dist_y = fabs(1.0 / ray_dir_y);
-	map_x = (int)game->player.x;
-	map_y = (int)game->player.y;
-	if (ray_dir_x < 0)
-		step_x = -1;
-	else
-		step_x = 1;
-	if (ray_dir_y < 0)
-		step_y = -1;
-	else
-		step_y = 1;
-	if (ray_dir_x < 0)
-		side_dist_x = (game->player.x - map_x) * delta_dist_x;
-	else
-		side_dist_x = (map_x + 1.0 - game->player.x) * delta_dist_x;
-	if (ray_dir_y < 0)
-		side_dist_y = (game->player.y - map_y) * delta_dist_y;
-	else
-		side_dist_y = (map_y + 1.0 - game->player.y) * delta_dist_y;
-	while (1)
-	{
-		if (side_dist_x < side_dist_y)
-		{
-			side_dist_x += delta_dist_x;
-			map_x += step_x;
-			ray.is_vertical = 1;
-		}
-		else
-		{
-			side_dist_y += delta_dist_y;
-			map_y += step_y;
-			ray.is_vertical = 0;
-		}
-		if (map_x >= 0 && map_x < game->map_data->width && map_y >= 0
-			&& map_y < game->map_data->height
-			&& game->map_data->grid[map_y][map_x] == '1')
-		{
-			ray.wall_hit_x = map_x;
-			ray.wall_hit_y = map_y;
-			break ;
-		}
-	}
-	if (ray.is_vertical)
-		ray.distance = (map_x - game->player.x + (1 - step_x) / 2) / ray_dir_x;
-	else
-		ray.distance = (map_y - game->player.y + (1 - step_y) / 2) / ray_dir_y;
+	init_ray_and_dda(&ray, &dda, ray_angle, game);
+	calculate_step_and_side_dist(&dda, game);
+	perform_dda(&ray, &dda, game);
+	calculate_ray_distance(&ray, &dda, game);
 	return (ray);
 }
 

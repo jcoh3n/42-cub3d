@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 17:38:04 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/30 17:59:03 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/02/04 19:24:28 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,6 +241,44 @@ typedef struct s_ray
 	int				facing_right;
 }					t_ray;
 
+/* Raycasting Structures */
+typedef struct s_wall_render
+{
+	int				wall_height;
+	int				wall_top;
+	int				wall_bottom;
+	double			wall_x;
+	int				tex_x;
+	double			step;
+	double			tex_pos;
+	double			shade;
+	int				tex_y;
+}					t_wall_render;
+
+typedef struct s_color_data
+{
+	int				ceiling_color;
+	int				floor_color;
+	unsigned int	color;
+	unsigned char	r;
+	unsigned char	g;
+	unsigned char	b;
+}					t_color_data;
+
+typedef struct s_dda_data
+{
+	double			ray_dir_x;
+	double			ray_dir_y;
+	double			delta_dist_x;
+	double			delta_dist_y;
+	int				map_x;
+	int				map_y;
+	double			side_dist_x;
+	double			side_dist_y;
+	int				step_x;
+	int				step_y;
+}					t_dda_data;
+
 /* Rendering Related Structures */
 typedef struct s_renderer
 {
@@ -437,5 +475,26 @@ int					get_mouse_center_y(void);
 
 /* Color Parsing Utils */
 void				validate_color_format(char *str);
+
+/* Raycasting - Wall Rendering */
+void				init_wall_dimensions(t_wall_render *wall,
+						double perp_distance);
+void				draw_ceiling(t_game *game, int x, t_wall_render *wall,
+						t_color_data *colors);
+void				init_wall_texture(t_wall_render *wall, t_ray *ray,
+						t_texture *texture, double perp_distance, t_game *game);
+void				draw_textured_wall(t_game *game, int x, t_wall_render *wall,
+						t_texture *texture, t_color_data *colors);
+void				draw_floor(t_game *game, int x, t_wall_render *wall,
+						t_color_data *colors);
+
+/* Raycasting - Ray Calculations */
+void				init_ray_and_dda(t_ray *ray, t_dda_data *dda,
+						double ray_angle, t_game *game);
+void				calculate_step_and_side_dist(t_dda_data *dda, t_game *game);
+int					check_wall_hit(t_dda_data *dda, t_game *game);
+void				perform_dda(t_ray *ray, t_dda_data *dda, t_game *game);
+void				calculate_ray_distance(t_ray *ray, t_dda_data *dda,
+						t_game *game);
 
 #endif
