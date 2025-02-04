@@ -34,6 +34,10 @@ SRCS = src/main.c \
        src/minimap/minimap_init.c \
        src/window/render.c \
        src/raycasting/raycasting.c \
+       src/raycasting/render/wall_render.c \
+       src/raycasting/render/texture_utils.c \
+       src/raycasting/render/draw_utils.c \
+       src/raycasting/dda/dda_utils.c \
 
 
 # Object files
@@ -70,6 +74,8 @@ $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)/utils
 	@mkdir -p $(OBJ_DIR)/minimap
 	@mkdir -p $(OBJ_DIR)/raycasting
+	@mkdir -p $(OBJ_DIR)/raycasting/render
+	@mkdir -p $(OBJ_DIR)/raycasting/dda
 
 $(LIBFT):
 	@echo "$(BLUE)Compiling libft...$(RESET)"

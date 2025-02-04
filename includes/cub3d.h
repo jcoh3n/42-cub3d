@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 17:38:04 by jcohen            #+#    #+#             */
-/*   Updated: 2025/02/04 19:24:28 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/02/04 20:03:59 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,11 @@
 
 /* Math Constants */
 # define M_PI 3.14159265358979323846
+
+/* Render Settings */
+# define MAX_RENDER_DISTANCE 10.0
+# define MIN_SHADE 0.3
+# define SHADE_STEP 0.7
 
 /* Minimap Settings */
 # define MINIMAP_SCALE 15
@@ -458,7 +463,34 @@ int					game_loop(t_game *game);
 /* Raycasting Functions */
 void				cast_rays(t_game *game);
 t_ray				cast_single_ray(t_game *game, double ray_angle);
+
+/* Wall Rendering Functions */
 void				render_wall_stripe(t_game *game, int x, t_ray *ray);
+void				init_wall_dimensions(t_wall_render *wall,
+						double perp_distance);
+t_texture			*get_wall_texture(t_game *game, t_ray *ray);
+
+/* Texture Functions */
+int					get_texture_x(t_ray *ray, t_texture *texture);
+unsigned int		get_texture_color(t_texture *texture, int tex_x, int tex_y);
+void				init_wall_texture(t_wall_render *wall, t_ray *ray,
+						t_texture *texture, double perp_distance, t_game *game);
+
+/* Drawing Functions */
+void				draw_ceiling(t_game *game, int x, t_wall_render *wall,
+						t_color_data *colors);
+void				draw_textured_wall(t_game *game, int x, t_wall_render *wall,
+						t_texture *texture, t_color_data *colors);
+void				draw_floor(t_game *game, int x, t_wall_render *wall,
+						t_color_data *colors);
+
+/* DDA Algorithm Functions */
+void				init_ray_and_dda(t_ray *ray, t_dda_data *dda,
+						double ray_angle, t_game *game);
+void				calculate_step_and_side_dist(t_dda_data *dda, t_game *game);
+void				perform_dda(t_ray *ray, t_dda_data *dda, t_game *game);
+void				calculate_ray_distance(t_ray *ray, t_dda_data *dda,
+						t_game *game);
 
 /* Mouse Events */
 void				toggle_mouse_capture(t_game *game);
@@ -475,26 +507,5 @@ int					get_mouse_center_y(void);
 
 /* Color Parsing Utils */
 void				validate_color_format(char *str);
-
-/* Raycasting - Wall Rendering */
-void				init_wall_dimensions(t_wall_render *wall,
-						double perp_distance);
-void				draw_ceiling(t_game *game, int x, t_wall_render *wall,
-						t_color_data *colors);
-void				init_wall_texture(t_wall_render *wall, t_ray *ray,
-						t_texture *texture, double perp_distance, t_game *game);
-void				draw_textured_wall(t_game *game, int x, t_wall_render *wall,
-						t_texture *texture, t_color_data *colors);
-void				draw_floor(t_game *game, int x, t_wall_render *wall,
-						t_color_data *colors);
-
-/* Raycasting - Ray Calculations */
-void				init_ray_and_dda(t_ray *ray, t_dda_data *dda,
-						double ray_angle, t_game *game);
-void				calculate_step_and_side_dist(t_dda_data *dda, t_game *game);
-int					check_wall_hit(t_dda_data *dda, t_game *game);
-void				perform_dda(t_ray *ray, t_dda_data *dda, t_game *game);
-void				calculate_ray_distance(t_ray *ray, t_dda_data *dda,
-						t_game *game);
 
 #endif
