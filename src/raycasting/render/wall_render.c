@@ -1,8 +1,16 @@
-#include "cub3d.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   wall_render.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: wander <wander@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/04 20:12:41 by wander            #+#    #+#             */
+/*   Updated: 2025/02/04 20:14:26 by wander           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#define MAX_RENDER_DISTANCE 10.0
-#define MIN_SHADE 0.3
-#define SHADE_STEP 0.7
+#include "cub3d.h"
 
 t_texture	*get_wall_texture(t_game *game, t_ray *ray)
 {
