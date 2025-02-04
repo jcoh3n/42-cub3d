@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 17:55:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/29 15:45:23 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/02/04 19:09:06 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,19 +37,15 @@ int	get_texture_x(t_ray *ray, t_texture *texture)
 	double	wall_x;
 	int		tex_x;
 
-	// Calculate exact hit point on the wall
 	if (ray->is_vertical)
 		wall_x = ray->wall_hit_y + (ray->distance * sin(ray->ray_angle));
 	else
 		wall_x = ray->wall_hit_x + (ray->distance * cos(ray->ray_angle));
-	wall_x -= floor(wall_x); // Only keep decimal part
-	// Convert to texture coordinate
+	wall_x -= floor(wall_x);
 	tex_x = (int)(wall_x * (double)texture->width);
-	// Flip texture coordinate if needed
 	if ((ray->is_vertical && !ray->facing_right) || (!ray->is_vertical
 			&& ray->facing_up))
 		tex_x = texture->width - tex_x - 1;
-	// Ensure texture coordinate is within bounds
 	if (tex_x < 0)
 		tex_x = 0;
 	if (tex_x >= texture->width)
@@ -61,21 +57,14 @@ unsigned int	get_texture_color(t_texture *texture, int tex_x, int tex_y)
 {
 	char	*pixel_addr;
 
-	// Use pre-stored texture data
 	if (!texture->addr)
-		return (0x0); // Return black if texture data is invalid
-	// Calculate pixel position using pre-stored values
+		return (0x0);
 	pixel_addr = texture->addr + (tex_y * texture->line_length + tex_x
 			* (texture->bits_per_pixel / 8));
-	// Handle endianness using pre-stored value
-	if (texture->endian == 1) // Big endian
-	{
+	if (texture->endian == 1)
 		return ((unsigned char)pixel_addr[0] << 24 | (unsigned char)pixel_addr[1] << 16 | (unsigned char)pixel_addr[2] << 8 | (unsigned char)pixel_addr[3]);
-	}
-	else // Little endian
-	{
+	else
 		return (*(unsigned int *)pixel_addr);
-	}
 }
 
 void	render_wall_stripe(t_game *game, int x, t_ray *ray)
@@ -99,80 +88,72 @@ void	render_wall_stripe(t_game *game, int x, t_ray *ray)
 	unsigned char	g;
 	unsigned char	b;
 	int				floor_color;
+	int				y;
 
-	// Calculate perpendicular distance to prevent fisheye effect
 	player_angle = atan2(game->player.dir_y, game->player.dir_x);
 	perp_distance = ray->distance * cos(ray->ray_angle - player_angle);
-	// Calculate wall height
 	wall_height = (int)(WINDOW_HEIGHT / perp_distance);
-	// Calculate wall top and bottom
 	wall_top = (WINDOW_HEIGHT - wall_height) / 2;
 	wall_bottom = (WINDOW_HEIGHT + wall_height) / 2;
-	// Clamp values
 	if (wall_top < 0)
 		wall_top = 0;
 	if (wall_bottom >= WINDOW_HEIGHT)
 		wall_bottom = WINDOW_HEIGHT - 1;
-	// Draw ceiling
 	ceiling_color = (game->map_data->ceiling.r << 16) | (game->map_data->ceiling.g << 8) | game->map_data->ceiling.b;
-	for (int y = 0; y < wall_top; y++)
+	y = 0;
+	while (y < wall_top)
+	{
 		put_pixel(&game->renderer.frame, x, y, ceiling_color);
-	// Get appropriate texture
+		y++;
+	}
 	texture = get_wall_texture(game, ray);
-	// Calculate wall X coordinate (where exactly the ray hit the wall)
 	if (ray->is_vertical)
 		wall_x = game->player.y + ray->distance * sin(ray->ray_angle);
 	else
 		wall_x = game->player.x + ray->distance * cos(ray->ray_angle);
 	wall_x -= floor(wall_x);
-	// Calculate x coordinate on the texture
 	tex_x = (int)(wall_x * texture->width);
 	if ((ray->is_vertical && !ray->facing_right) || (!ray->is_vertical
 			&& ray->facing_up))
 		tex_x = texture->width - tex_x - 1;
-	// Ensure texture coordinate is within bounds
-	tex_x = (tex_x < 0) ? 0 : tex_x;
-	tex_x = (tex_x >= texture->width) ? texture->width - 1 : tex_x;
-	// Calculate texture step and position
+	if (tex_x < 0)
+		tex_x = 0;
+	if (tex_x >= texture->width)
+		tex_x = texture->width - 1;
 	step = (double)texture->height / wall_height;
 	tex_pos = (wall_top - WINDOW_HEIGHT / 2 + wall_height / 2) * step;
-	// Calculate shading factor based on distance
 	shade = 1.0;
 	if (perp_distance > 1.0)
 	{
-		// Calculate shade based on distance with a smoother falloff
 		shade = 1.0 - (perp_distance / MAX_RENDER_DISTANCE) * SHADE_STEP;
-		// Ensure minimum brightness
 		if (shade < MIN_SHADE)
 			shade = MIN_SHADE;
 	}
-	// Draw the wall slice
-	for (int y = wall_top; y < wall_bottom; y++)
+	y = wall_top;
+	while (y < wall_bottom)
 	{
 		tex_y = (int)tex_pos & (texture->height - 1);
-		// Get color from texture
 		pixel_addr = texture->addr + (tex_y * texture->line_length + tex_x
 				* (texture->bits_per_pixel / 8));
-		if (texture->endian == 1) // Big endian
-		{
+		if (texture->endian == 1)
 			color = ((unsigned char)pixel_addr[0] << 24 | (unsigned char)pixel_addr[1] << 16 | (unsigned char)pixel_addr[2] << 8 | (unsigned char)pixel_addr[3]);
-		}
-		else // Little endian
-		{
+		else
 			color = *(unsigned int *)pixel_addr;
-		}
-		// Apply distance-based shading
 		r = ((color >> 16) & 0xFF) * shade;
 		g = ((color >> 8) & 0xFF) * shade;
 		b = (color & 0xFF) * shade;
 		color = (r << 16) | (g << 8) | b;
 		put_pixel(&game->renderer.frame, x, y, color);
 		tex_pos += step;
+		y++;
 	}
-	// Draw floor
 	floor_color = (game->map_data->floor.r << 16) | (game->map_data->floor.g << 8) | game->map_data->floor.b;
-	for (int y = wall_bottom; y < WINDOW_HEIGHT; y++)
+	y = wall_bottom;
+	while (y < WINDOW_HEIGHT)
+	{
 		put_pixel(&game->renderer.frame, x, y, floor_color);
+		y++;
+	}
 }
 
 t_ray	cast_single_ray(t_game *game, double ray_angle)
@@ -190,23 +171,22 @@ t_ray	cast_single_ray(t_game *game, double ray_angle)
 	int		step_y;
 
 	ray.ray_angle = ray_angle;
-	// Initialize ray direction flags
 	ray.facing_up = (sin(ray_angle) < 0);
 	ray.facing_right = (cos(ray_angle) > 0);
-	// Ray direction vector
 	ray_dir_x = cos(ray_angle);
 	ray_dir_y = sin(ray_angle);
-	// Calculate delta distance
 	delta_dist_x = fabs(1.0 / ray_dir_x);
 	delta_dist_y = fabs(1.0 / ray_dir_y);
-	// Current map position
 	map_x = (int)game->player.x;
 	map_y = (int)game->player.y;
-	// Length of ray from current position to next x or y-side
-	// Direction to step in x or y direction (either +1 or -1)
-	step_x = (ray_dir_x < 0) ? -1 : 1;
-	step_y = (ray_dir_y < 0) ? -1 : 1;
-	// Calculate initial side_dist
+	if (ray_dir_x < 0)
+		step_x = -1;
+	else
+		step_x = 1;
+	if (ray_dir_y < 0)
+		step_y = -1;
+	else
+		step_y = 1;
 	if (ray_dir_x < 0)
 		side_dist_x = (game->player.x - map_x) * delta_dist_x;
 	else
@@ -215,10 +195,8 @@ t_ray	cast_single_ray(t_game *game, double ray_angle)
 		side_dist_y = (game->player.y - map_y) * delta_dist_y;
 	else
 		side_dist_y = (map_y + 1.0 - game->player.y) * delta_dist_y;
-	// Perform DDA
 	while (1)
 	{
-		// Jump to next map square
 		if (side_dist_x < side_dist_y)
 		{
 			side_dist_x += delta_dist_x;
@@ -231,7 +209,6 @@ t_ray	cast_single_ray(t_game *game, double ray_angle)
 			map_y += step_y;
 			ray.is_vertical = 0;
 		}
-		// Check if ray has hit a wall
 		if (map_x >= 0 && map_x < game->map_data->width && map_y >= 0
 			&& map_y < game->map_data->height
 			&& game->map_data->grid[map_y][map_x] == '1')
@@ -241,7 +218,6 @@ t_ray	cast_single_ray(t_game *game, double ray_angle)
 			break ;
 		}
 	}
-	// Calculate distance
 	if (ray.is_vertical)
 		ray.distance = (map_x - game->player.x + (1 - step_x) / 2) / ray_dir_x;
 	else
@@ -255,18 +231,17 @@ void	cast_rays(t_game *game)
 	double	ray_angle;
 	double	angle_step;
 	t_ray	ray;
+	int		x;
 
-	// Calculate starting ray angle based on player's direction
 	player_angle = atan2(game->player.dir_y, game->player.dir_x);
 	ray_angle = player_angle - (FOV / 2);
 	angle_step = FOV / WINDOW_WIDTH;
-	for (int x = 0; x < WINDOW_WIDTH; x++)
+	x = 0;
+	while (x < WINDOW_WIDTH)
 	{
-		// Cast a single ray
 		ray = cast_single_ray(game, ray_angle);
-		// Render wall stripe
 		render_wall_stripe(game, x, &ray);
-		// Move to next ray
 		ray_angle += angle_step;
+		x++;
 	}
 }
