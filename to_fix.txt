@@ -1,0 +1,22 @@
+Testing: Not properly enclosed map
+Map: maps/invalid_not_properly_enclosed.cub
+Expected: Map not enclosed by walls
+✗ Test failed
+Got: 
+
+maps/invalid_not_properly_enclosed.cub
+
+Errors on corner wall like : 
+                   1101
+1000100010100000000101
+10001000101011111110101
+
+corners are not protect well so it should be parse right
+
+                   1101
+1000100010100000000101 <-- with a space here its good and parsing OK its when the space isnt there that the error's comming
+10001000101011111110101
+
+the rest of ERRORS in ./test_parsing are not a big deal
+So lets jsut fix this one in the map parsing
+
