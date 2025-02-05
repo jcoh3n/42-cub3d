@@ -36,8 +36,7 @@ git clone https://github.com/jcoh3n/42-cub3d.git cub3D
 cd cub3D
 
 # Initialize and update submodules (for required libraries)
-git submodule init
-git submodule update
+git submodule update --init --recursive
 
 # Build the project
 make
