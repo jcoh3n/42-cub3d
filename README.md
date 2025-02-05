@@ -98,7 +98,7 @@ Map Elements:
 
 ## 🖼️ Screenshots
 
-![Cub3D Gameplay](./assets/gameplay.png)
+![Cub3D Gameplay](./assets/gameplay-view.png)
 *Screenshot showing the 3D rendered view with textured walls and minimap*
 
 ## 🛠️ Technical Details
