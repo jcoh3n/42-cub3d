@@ -95,7 +95,7 @@ Map Elements:
 - `ESC`: Exit game
 - `M`: Toggle mouse capture
 
-## 🖼️ Screenshots
+## Gameplay
 
 ![Cub3D Gameplay](./assets/gameplay-view.png)
 *Screenshot showing the 3D rendered view with textured walls and minimap*
