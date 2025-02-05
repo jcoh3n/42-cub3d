@@ -1,6 +1,5 @@
-*.md
 norme.en.pdf
-*.sh
 .gitmodules
 objs/
 *.o
+./cub3D
