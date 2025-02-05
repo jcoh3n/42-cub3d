@@ -2,4 +2,4 @@ norme.en.pdf
 .gitmodules
 objs/
 *.o
-./cub3D
+cub3D
