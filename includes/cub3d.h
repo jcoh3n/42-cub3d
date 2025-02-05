@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wander <wander@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 17:38:04 by jcohen            #+#    #+#             */
-/*   Updated: 2025/02/04 20:13:27 by wander           ###   ########.fr       */
+/*   Updated: 2025/02/05 15:48:02 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,6 +258,7 @@ typedef struct s_wall_render
 	double			tex_pos;
 	double			shade;
 	int				tex_y;
+	t_player		*player;
 }					t_wall_render;
 
 typedef struct s_color_data
@@ -474,13 +475,13 @@ t_texture			*get_wall_texture(t_game *game, t_ray *ray);
 int					get_texture_x(t_ray *ray, t_texture *texture);
 unsigned int		get_texture_color(t_texture *texture, int tex_x, int tex_y);
 void				init_wall_texture(t_wall_render *wall, t_ray *ray,
-						t_texture *texture, double perp_distance, t_game *game);
+						t_texture *texture, double perp_distance);
 
 /* Drawing Functions */
 void				draw_ceiling(t_game *game, int x, t_wall_render *wall,
 						t_color_data *colors);
 void				draw_textured_wall(t_game *game, int x, t_wall_render *wall,
-						t_texture *texture, t_color_data *colors);
+						t_texture *texture);
 void				draw_floor(t_game *game, int x, t_wall_render *wall,
 						t_color_data *colors);
 
@@ -507,5 +508,6 @@ int					get_mouse_center_y(void);
 
 /* Color Parsing Utils */
 void				validate_color_format(char *str);
+unsigned int		get_rgb_color(t_color color);
 
 #endif

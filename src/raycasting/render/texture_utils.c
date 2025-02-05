@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 20:12:39 by wander            #+#    #+#             */
-/*   Updated: 2025/02/05 15:22:40 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/02/05 15:48:02 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,9 @@ static void	init_wall_texture_aux(t_wall_render *wall, t_ray *ray,
 	double	wall_x;
 
 	if (ray->is_vertical)
-		wall_x = wall->game->player.y + ray->distance * sin(ray->ray_angle);
+		wall_x = wall->player->y + ray->distance * sin(ray->ray_angle);
 	else
-		wall_x = wall->game->player.x + ray->distance * cos(ray->ray_angle);
+		wall_x = wall->player->x + ray->distance * cos(ray->ray_angle);
 	wall_x -= floor(wall_x);
 	wall->tex_x = (int)(wall_x * texture->width);
 	if ((ray->is_vertical && !ray->facing_right) || (!ray->is_vertical

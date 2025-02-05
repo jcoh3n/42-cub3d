@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 17:19:39 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/30 17:44:54 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/02/05 16:06:49 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	is_valid_position(t_map_data *map, int i, int j)
 {
 	int	len_above;
 	int	len_below;
+	int	curr_len;
 
 	if (map->grid[i][j] == '1' || map->grid[i][j] == ' ')
 		return (1);
@@ -23,13 +24,19 @@ int	is_valid_position(t_map_data *map, int i, int j)
 		return (0);
 	len_above = ft_strlen(map->grid[i - 1]);
 	len_below = ft_strlen(map->grid[i + 1]);
-	if (j >= len_above || j >= len_below)
+	curr_len = ft_strlen(map->grid[i]);
+	if (j >= len_above || j >= len_below || j >= curr_len)
 		return (0);
 	if (map->grid[i - 1][j] == ' ' || map->grid[i + 1][j] == ' ')
 		return (0);
-	if (j == 0 || j == (int)ft_strlen(map->grid[i]) - 1)
+	if (j == 0 || j == curr_len - 1)
 		return (0);
 	if (map->grid[i][j - 1] == ' ' || map->grid[i][j + 1] == ' ')
+		return (0);
+	if (j >= len_above - 1 || j >= len_below - 1)
+		return (0);
+	if (map->grid[i - 1][j + 1] == ' ' || map->grid[i + 1][j + 1] == ' '
+		|| map->grid[i - 1][j - 1] == ' ' || map->grid[i + 1][j - 1] == ' ')
 		return (0);
 	return (1);
 }

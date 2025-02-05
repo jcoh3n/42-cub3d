@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wall_render.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wander <wander@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 20:12:41 by wander            #+#    #+#             */
-/*   Updated: 2025/02/04 20:14:26 by wander           ###   ########.fr       */
+/*   Updated: 2025/02/05 15:48:02 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,11 @@ void	render_wall_stripe(t_game *game, int x, t_ray *ray)
 
 	player_angle = atan2(game->player.dir_y, game->player.dir_x);
 	perp_distance = ray->distance * cos(ray->ray_angle - player_angle);
-	init_wall_dimensions(&wall, perp_distance);
-	draw_ceiling(game, x, &wall, &colors);
 	texture = get_wall_texture(game, ray);
-	init_wall_texture(&wall, ray, texture, perp_distance, game);
-	draw_textured_wall(game, x, &wall, texture, &colors);
+	init_wall_dimensions(&wall, perp_distance);
+	wall.player = &game->player;
+	init_wall_texture(&wall, ray, texture, perp_distance);
+	draw_ceiling(game, x, &wall, &colors);
+	draw_textured_wall(game, x, &wall, texture);
 	draw_floor(game, x, &wall, &colors);
 }
