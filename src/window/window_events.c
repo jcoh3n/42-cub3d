@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 16:15:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/29 16:04:23 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/02/07 19:13:03 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,7 @@ int	handle_window_close(t_game *game)
 {
 	game->state.is_running = 0;
 	mlx_loop_end(game->renderer.mlx);
-	mlx_destroy_window(game->renderer.mlx, game->renderer.win);
-	mlx_destroy_display(game->renderer.mlx);
-	free(game->renderer.mlx);
+	cleanup_game(game);
 	exit(0);
 	return (0);
 }

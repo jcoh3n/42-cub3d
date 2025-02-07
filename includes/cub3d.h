@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 17:38:04 by jcohen            #+#    #+#             */
-/*   Updated: 2025/02/05 15:48:02 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/02/07 19:00:49 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@
 # define ERR_MAP_ORDER "Map must come after all other elements"
 # define ERR_PLAYER_NONE "No player position found"
 # define ERR_PLAYER_MULTIPLE "Multiple player positions found"
+# define ERR_PLAYER_POS "Invalid player position"
 # define ERR_COLOR_FORMAT "Invalid color format"
 
 /* Error Messages - System */
@@ -404,8 +405,8 @@ void				check_texture_files(t_map_data *map);
 void				store_map_line(t_map_data *map, char *line);
 
 /* map_consistency_utils.c */
-void				check_map_chars(t_map_data *map);
-void				check_player(t_map_data *map);
+int					check_map_chars(t_map_data *map);
+int					check_player(t_map_data *map);
 int					check_line_consistency(t_map_data *map, int i, int len);
 int					is_valid_position(t_map_data *map, int i, int j);
 
@@ -430,7 +431,8 @@ void				clear_buffer(t_img *img);
 void				swap_buffers(t_game *game);
 
 /* Map Validation Functions */
-void				check_map_consistency(t_map_data *map);
+void				validate_map(t_map_data *map);
+int					check_map_consistency(t_map_data *map);
 void				free_map_grid(char **grid);
 int					flood_fill(char **map, int x, int y, t_dims dims);
 

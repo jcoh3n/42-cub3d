@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 15:00:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/30 17:55:04 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/02/07 18:55:57 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,19 +43,12 @@ static int	should_draw_tile(t_game *game, int x, int y)
 static void	draw_map_tile(t_game *game, int x, int y)
 {
 	char	tile;
-	char	flood_tile;
 
 	tile = game->map_data->grid[y][x];
-	flood_tile = game->map_data->flood_grid[y][x];
 	if (tile == '1')
 		draw_square(game, x, y, WALL_COLOR);
 	else if (tile == '0' || ft_strchr("NSEW", tile))
-	{
-		if (flood_tile == 'F')
-			draw_square(game, x, y, FLOOR_COLOR);
-		else
-			draw_square(game, x, y, WALL_COLOR);
-	}
+		draw_square(game, x, y, FLOOR_COLOR);
 }
 
 void	update_minimap(t_game *game)

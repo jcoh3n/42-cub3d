@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 15:32:51 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/30 19:04:51 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/02/07 19:10:11 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,15 +55,33 @@ t_map_data	*init_map(void)
 {
 	t_map_data	*map;
 
-	map = (t_map_data *)ft_calloc(1, sizeof(t_map_data));
+	map = (t_map_data *)malloc(sizeof(t_map_data));
 	if (!map)
 		error_exit(ERR_MALLOC);
+	map->grid = NULL;
+	map->flood_grid = NULL;
+	map->width = 0;
+	map->height = 0;
 	map->floor.r = -1;
 	map->floor.g = -1;
 	map->floor.b = -1;
 	map->ceiling.r = -1;
 	map->ceiling.g = -1;
 	map->ceiling.b = -1;
+	map->player_start_dir = '\0';
+	map->player_start_x = -1;
+	map->player_start_y = -1;
+	map->player_dir = '\0';
+	map->player_x = -1;
+	map->player_y = -1;
+	map->north.img = NULL;
+	map->south.img = NULL;
+	map->east.img = NULL;
+	map->west.img = NULL;
+	map->north.path = NULL;
+	map->south.path = NULL;
+	map->east.path = NULL;
+	map->west.path = NULL;
 	return (map);
 }
 
@@ -71,12 +89,17 @@ t_game	*init_game(void)
 {
 	t_game	*game;
 
-	game = (t_game *)ft_calloc(1, sizeof(t_game));
+	game = (t_game *)malloc(sizeof(t_game));
 	if (!game)
 		error_exit(ERR_MALLOC);
 	game->renderer.mlx = mlx_init();
 	if (!game->renderer.mlx)
 		error_exit(ERR_MALLOC);
+	game->renderer.win = NULL;
+	game->renderer.frame.img = NULL;
+	game->renderer.frame.addr = NULL;
+	game->renderer.minimap.img = NULL;
+	game->renderer.minimap.addr = NULL;
 	game->renderer.render_flags = 0;
 	game->renderer.current_texture = NULL;
 	game->state.is_running = 1;
@@ -105,7 +128,10 @@ int	main(int argc, char **argv)
 		error_exit(ERR_MALLOC);
 	parse_map(argv[1], game->map_data);
 	if (!init_window(game))
+	{
+		cleanup_game(game);
 		error_exit(ERR_WINDOW_INIT);
+	}
 	game->map = game->map_data->grid;
 	init_player(game);
 	init_minimap(game);

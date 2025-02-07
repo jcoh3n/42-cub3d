@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 17:19:39 by jcohen            #+#    #+#             */
-/*   Updated: 2025/02/05 16:06:49 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/02/07 19:00:49 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	is_valid_position(t_map_data *map, int i, int j)
 	return (1);
 }
 
-void	check_map_chars(t_map_data *map)
+int	check_map_chars(t_map_data *map)
 {
 	int	i;
 	int	j;
@@ -53,14 +53,15 @@ void	check_map_chars(t_map_data *map)
 		while (map->grid[i][j])
 		{
 			if (!ft_strchr(VALID_MAP_CHARS, map->grid[i][j]))
-				error_exit(ERR_MAP_CHARS);
+				return (0);
 			j++;
 		}
 		i++;
 	}
+	return (1);
 }
 
-void	check_player(t_map_data *map)
+int	check_player(t_map_data *map)
 {
 	int	i;
 	int	j;
@@ -79,10 +80,9 @@ void	check_player(t_map_data *map)
 		}
 		i++;
 	}
-	if (player_count == 0)
-		error_exit(ERR_PLAYER_NONE);
-	if (player_count > 1)
-		error_exit(ERR_PLAYER_MULTIPLE);
+	if (player_count == 0 || player_count > 1)
+		return (0);
+	return (1);
 }
 
 int	check_line_consistency(t_map_data *map, int i, int len)
