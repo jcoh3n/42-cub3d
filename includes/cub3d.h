@@ -74,11 +74,11 @@
 # define KEY_M 109
 
 /* Movement Constants */
-# define MOVE_SPEED 0.05
-# define ROT_SPEED 0.03
+# define MOVE_SPEED 0.04
+# define ROT_SPEED 0.02
 
 /* Mouse Settings */
-# define MOUSE_SENSITIVITY 0.0001
+# define MOUSE_SENSITIVITY 0.0003
 # define MOUSE_CAPTURE_KEY 109
 # define MOUSE_DEADZONE 2
 
