@@ -6,7 +6,7 @@
 #    By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/05 17:37:18 by jcohen            #+#    #+#              #
-#    Updated: 2025/02/05 17:37:20 by jcohen           ###   ########.fr        #
+#    Updated: 2025/02/07 19:57:17 by jcohen           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,6 @@ LDLIBS = -lft -lmlx -lXext -lX11 -lm
 # Source files
 SRCS = src/main.c \
 	   src/clean/ft_cleanup.c \
-	   src/clean/ft_cleanup2.c \
        src/parsing/parsing.c \
        src/parsing/parse_textures.c \
        src/parsing/parse_colors.c \

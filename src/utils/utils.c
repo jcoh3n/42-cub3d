@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 16:35:00 by jcohen            #+#    #+#             */
-/*   Updated: 2025/02/05 15:33:04 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/02/07 20:19:23 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,31 @@ int	game_loop(t_game *game)
 unsigned int	get_rgb_color(t_color color)
 {
 	return ((color.r << 16) | (color.g << 8) | color.b);
+}
+
+void	free_2d_array(char **array, int height)
+{
+	int	i;
+
+	if (!array)
+		return ;
+	i = 0;
+	if (height == -1)
+	{
+		while (array[i])
+			free(array[i++]);
+	}
+	else
+	{
+		while (i < height)
+		{
+			if (array[i])
+			{
+				free(array[i]);
+				array[i] = NULL;
+			}
+			i++;
+		}
+	}
+	free(array);
 }

@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 17:19:35 by jcohen            #+#    #+#             */
-/*   Updated: 2025/02/07 19:09:23 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/02/07 19:58:59 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,41 +14,10 @@
 
 static void	free_old_grid(t_map_data *map)
 {
-	int	i;
-
 	if (!map || !map->grid)
 		return ;
-	i = 0;
-	while (i < map->height)
-	{
-		if (map->grid[i])
-		{
-			free(map->grid[i]);
-			map->grid[i] = NULL;
-		}
-		i++;
-	}
-	free(map->grid);
+	free_2d_array(map->grid, map->height);
 	map->grid = NULL;
-}
-
-static void	cleanup_new_grid(char **new_grid, int height)
-{
-	int	i;
-
-	if (!new_grid)
-		return ;
-	i = 0;
-	while (i < height)
-	{
-		if (new_grid[i])
-		{
-			free(new_grid[i]);
-			new_grid[i] = NULL;
-		}
-		i++;
-	}
-	free(new_grid);
 }
 
 void	update_map_grid(t_map_data *map, char *new_line)
@@ -72,7 +41,7 @@ void	update_map_grid(t_map_data *map, char *new_line)
 		if (!new_grid[i])
 		{
 			free(new_line);
-			cleanup_new_grid(new_grid, i);
+			free_2d_array(new_grid, i);
 			error_exit(ERR_MALLOC);
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 17:38:04 by jcohen            #+#    #+#             */
-/*   Updated: 2025/02/07 19:30:15 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/02/07 20:20:03 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -390,8 +390,6 @@ typedef enum e_bool
 
 /* Main Functions */
 void				error_exit(char *message);
-void				free_map(t_map_data *map);
-void				free_flood_grid(t_map_data *map);
 void				cleanup_game(t_game *game);
 void				clean_map_data(t_map_data *map, void *mlx);
 t_game				*init_game(void);
@@ -434,12 +432,10 @@ void				swap_buffers(t_game *game);
 /* Map Validation Functions */
 void				validate_map(t_map_data *map);
 int					check_map_consistency(t_map_data *map);
-void				free_map_grid(char **grid);
 int					flood_fill(char **map, int x, int y, t_dims dims);
 
 /* Map Storage Functions */
 char				**create_temp_map(t_map_data *map);
-void				free_temp_map(char **temp_map);
 
 /* Player Functions */
 void				init_player_direction(t_player *player, char dir);
@@ -512,5 +508,10 @@ int					get_mouse_center_y(void);
 /* Color Parsing Utils */
 void				validate_color_format(char *str);
 unsigned int		get_rgb_color(t_color color);
+
+/* Cleanup Functions */
+void				clean_map_data(t_map_data *map, void *mlx);
+void				cleanup_game(t_game *game);
+void				free_2d_array(char **array, int height);
 
 #endif

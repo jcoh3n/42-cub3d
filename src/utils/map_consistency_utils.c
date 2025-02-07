@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 17:19:39 by jcohen            #+#    #+#             */
-/*   Updated: 2025/02/07 19:31:32 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/02/07 19:36:15 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,10 +81,10 @@ int	check_player(t_map_data *map)
 		i++;
 	}
 	if (player_count == 0)
-		return (-1); // No player found
+		return (-1);
 	if (player_count > 1)
-		return (0); // Multiple players found
-	return (1);     // Exactly one player found
+		return (0);
+	return (1);
 }
 
 int	check_line_consistency(t_map_data *map, int i, int len)
