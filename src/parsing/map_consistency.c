@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:25:22 by jcohen            #+#    #+#             */
-/*   Updated: 2025/02/07 19:00:46 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/02/07 19:34:42 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,6 @@ int	check_map_consistency(t_map_data *map)
 	if (!check_map_chars(map))
 		return (0);
 	if (!check_map_edges(map))
-		return (0);
-	if (!check_player(map))
 		return (0);
 	return (1);
 }

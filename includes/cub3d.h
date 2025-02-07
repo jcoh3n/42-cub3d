@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 17:38:04 by jcohen            #+#    #+#             */
-/*   Updated: 2025/02/07 19:00:49 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/02/07 19:30:15 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@
 
 /* Error Messages - Config */
 # define ERR_TEXTURE "Missing texture configuration"
+# define ERR_NO_PLAYER "No player position found"
 # define ERR_TEXTURE_PATH "Invalid texture path"
 # define ERR_TEXTURE_ACCESS "Could not access texture file"
 # define ERR_TEXTURE_DUP "Duplicate texture definition"
@@ -112,7 +113,6 @@
 # define ERR_MAP_EMPTY "Empty line in map"
 # define ERR_MAP_EMPTY_LINE "Empty line within map"
 # define ERR_MAP_ORDER "Map must come after all other elements"
-# define ERR_PLAYER_NONE "No player position found"
 # define ERR_PLAYER_MULTIPLE "Multiple player positions found"
 # define ERR_PLAYER_POS "Invalid player position"
 # define ERR_COLOR_FORMAT "Invalid color format"
@@ -391,6 +391,7 @@ typedef enum e_bool
 /* Main Functions */
 void				error_exit(char *message);
 void				free_map(t_map_data *map);
+void				free_flood_grid(t_map_data *map);
 void				cleanup_game(t_game *game);
 void				clean_map_data(t_map_data *map, void *mlx);
 t_game				*init_game(void);

@@ -6,7 +6,7 @@
 /*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 16:17:19 by jcohen            #+#    #+#             */
-/*   Updated: 2025/01/30 17:42:18 by jcohen           ###   ########.fr       */
+/*   Updated: 2025/02/07 19:25:26 by jcohen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,25 @@ void	free_temp_map(char **temp_map)
 	while (temp_map[i])
 		free(temp_map[i++]);
 	free(temp_map);
+}
+
+void	free_map_grid(char **grid)
+{
+	int	i;
+
+	if (!grid)
+		return ;
+	i = 0;
+	while (grid[i])
+		free(grid[i++]);
+	free(grid);
+}
+
+void	free_flood_grid(t_map_data *map)
+{
+	if (map && map->flood_grid)
+	{
+		free_map_grid(map->flood_grid);
+		map->flood_grid = NULL;
+	}
 }
