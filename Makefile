@@ -6,7 +6,7 @@
 #    By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/05 17:37:18 by jcohen            #+#    #+#              #
-#    Updated: 2025/02/07 19:57:17 by jcohen           ###   ########.fr        #
+#    Updated: 2025/02/17 13:51:20 by jcohen           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -64,7 +64,14 @@ GREEN = \033[0;32m
 BLUE = \033[0;34m
 RESET = \033[0m
 
-all: $(NAME)
+all: init-submodules $(NAME)
+
+init-submodules:
+	@if [ ! -f lib/libft/Makefile ] || [ ! -f lib/minilibx-linux/Makefile ]; then \
+		echo "$(BLUE)Initializing submodules...$(RESET)"; \
+		git submodule init; \
+		git submodule update; \
+	fi
 
 $(OBJ_DIR)/%.o: src/%.c
 	@mkdir -p $(dir $@)

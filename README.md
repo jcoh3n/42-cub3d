@@ -30,15 +30,23 @@ Cub3D is a first-person 3D game engine built from scratch using the raycasting t
 
 ## 🛠️ Installation
 
+### Method 1 (Recommended):
 ```bash
-# Clone the repository with submodules
+# Clone the repository with submodules in one command
+git clone --recurse-submodules https://github.com/jcoh3n/42-cub3d.git cub3D
+cd cub3D
+
+# Build the project
+make
+```
+
+### Method 2:
+```bash
+# Clone the repository
 git clone https://github.com/jcoh3n/42-cub3d.git cub3D
 cd cub3D
 
-# Initialize and update submodules (for required libraries)
-git submodule update --init --recursive
-
-# Build the project
+# The Makefile will automatically initialize submodules
 make
 ```
 
